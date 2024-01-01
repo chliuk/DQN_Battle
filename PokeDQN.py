@@ -64,6 +64,7 @@ class Team:
         self.CP_limit = CP_limit
         self.fault = False
 
+
     def reset(self, pkList, teamID, CP_limit):
         self.countT = time_slot
         self.firstOrder = Pokemon(pkList[0][0], pkList[0][1], pkList[0][2], pkList[0][3], CP_limit)
@@ -71,13 +72,14 @@ class Team:
         self.thirdOrder = Pokemon(pkList[2][0], pkList[2][1], pkList[2][2], pkList[2][3], CP_limit)
         self.TeamID = teamID
         self.firstOrder.OnStage = True
-        self.battling = self.firstOrder
+        self.battling = Pokemon(pkList[0][0], pkList[0][1], pkList[0][2], pkList[0][3], CP_limit)
         self.battling.last_action_damage = 0
         self.shield = 2
         self.switchClock = 60
         self.receivedCM = False
         self.CP_limit = CP_limit
         self.fault = False
+
         
 
     def action(self, other, choice):
@@ -90,118 +92,61 @@ class Team:
         4: 換人
         5: 開盾
         '''
-        #不確定other, self的用法
-        pokemon_list = [self.firstOrder, self.secondOrder, self.thirdOrder] 
-        #換人冷卻計時+1
-        self.switchClock+=1
-        #在執行action之前檢查場上角色是否陣亡
-        if self.battling.HP <= 0:
-            #搜尋可上場的替換角色
-            battle_able = []
-            for pk in pokemon_list:
-                if pk.OnStageAble == True and pk.OnStage == False:
-                    battle_able = [battle_able, pk]
-
-            #先隨機挑角色上場，機制後續須補上
-            #如果沒有可使用角色，則隊伍fault
-            if not battle_able:
-                self.fault = True
-                #print("沒有可使用的寶可夢")
-            else:
-                if len(battle_able) == 1:                    
-                    self.switch_teammate(self.battling, battle_able[0])
-                    self.battling = battle_able[0]
-                else:
-                    if random.uniform(0, 1) >=0.5:                        
-                        self.switch_teammate(self.battling, battle_able[0])
-                        self.battling = battle_able[0]
-                    else:                        
-                        self.switch_teammate(self.battling, battle_able[1])    
-                        self.battling = battle_able[1]
-
-            waste_time = random.randint(5, 20)
-            return waste_time
         
-        #waste_time = max(waste_time,waste_time)
-        #timeslot -= waste_time
-        #other.countT = timeslot
-        #other.switchClock -= waste_time
-        #self.countT = timeslot
-        #self.switchClock -= waste_time
+        if self.countT == time_slot-1: 
+            #不確定other, self的用法
+            pokemon_list = [self.firstOrder, self.secondOrder, self.thirdOrder] 
 
-
-        if self.receivedCM == False:
-            if self.battling.HP >= 0:
+            if self.receivedCM == False:
                 if choice == 0:
                     self.fast_move(other)
-                elif choice == 1 and self.battling.pk_energy >= -1*self.battling.pk_cm1_energyLoss:
+                elif choice == 1:
                     self.charged_move1(other)
-                elif choice == 2 and self.battling.pk_energy >= -1*self.battling.pk_cm1_energyLoss:
+                elif choice == 2:
                     self.charged_move2(other)
                 elif choice == 3:
                     self.countT -= 1
                     #print("不動作一回合")
-                elif choice == 4 and self.switchClock >= 60:
+                elif choice == 4:
                     battle_able = []
-                    for pk in pokemon_list:
-                        if pk.OnStageAble == True and pk.OnStage == False:
-                            battle_able = battle_able + [pk]
+                    for i in range(0,len(pokemon_list)):
+                        if pokemon_list[i].OnStageAble == True and pokemon_list[i].OnStage == False:
+                            battle_able.append(i)
 
                     #先隨機挑角色上場，機制後續須補上
                     if not battle_able:
                         self.fault = True
-                        #print("沒有可使用的寶可夢")
                     else:
-                        if len(battle_able) == 1:                    
-                            self.switch_teammate(self.battling, battle_able[0])
-                            self.battling = battle_able[0]
-                            self.switchClock = 0
-                        else:
-                            if random.uniform(0, 1) >=0.5:                        
-                                self.switch_teammate(self.battling, battle_able[0])
-                                self.battling = battle_able[0]
-                                self.switchClock = 0
-                                
-                            else:                        
-                                self.switch_teammate(self.battling, battle_able[1])    
-                                self.battling = battle_able[1]  
-                                self.switchClock = 0
-                                    
-        else:
-            if self.countT == time_slot and self.switchClock >= 60:
-                if choice == 4:
+                        s = random.randint(0,len(battle_able)-1)
+                        for pk in pokemon_list:
+                            if pk == self.team.battling:
+                                self.team.battling.OnStage = False
+                                self.team.battling.OnStageAble = False
+                        self.team.battling = pokemon_list[battle_able[s]]
+                        pokemon_list[battle_able[s]].OnStage = True        
+                        self.switchClock = 0               
+            else:
+                if self.countT == time_slot and  choice == 4:
                     battle_able = []
-                    for pk in pokemon_list:
-                        if pk.OnStageAble == True and pk.OnStage == False:
-                            battle_able = battle_able + [pk]
+                    for i in range(0,len(pokemon_list)):
+                        if pokemon_list[i].OnStageAble == True and pokemon_list[i].OnStage == False:
+                            battle_able.append(i)
                             
-
                     #先隨機挑角色上場，機制後續須補上
                     if not battle_able:
                         self.fault = True
-                        #print("沒有可使用的寶可夢")
                     else:
-                        if len(battle_able) == 1:                    
-                            self.switch_teammate(self.battling, battle_able[0])
-                            self.battling = battle_able[0]
-                            self.switchClock = 0
-                        else:
-                            if random.uniform(0, 1) >=0.5:                        
-                                self.switch_teammate(self.battling, battle_able[0])
-                                self.battling = battle_able[0]
-                                self.switchClock = 0
-                            else:                      
-                                self.switch_teammate(self.battling, battle_able[1])    
-                                self.battling = battle_able[1]  
-                                self.switchClock = 0
-
-
-            else:        
-                if choice == 5 and self.shield > 0:
-                    self.shield -= 1
-                    self.battling.HP += other.battling.last_action_damage-1
-                    
-
+                        s = random.randint(0,len(battle_able)-1)
+                        for pk in pokemon_list:
+                            if pk == self.team.battling:
+                                self.team.battling.OnStage = False
+                        self.team.battling = pokemon_list[battle_able[s]]
+                        pokemon_list[battle_able[s]].OnStage = True
+                        self.switchClock = 0
+                elif choice == 5:
+                        self.shield -= 1
+                        self.battling.HP += other.battling.last_action_damage-1
+            
 
     def fast_move(self, other):
         with open('type.json', 'r', encoding="utf-8") as ty:
@@ -225,11 +170,9 @@ class Team:
         self.battling.pk_energy += self.battling.pk_fm_energyGain
         if  self.battling.pk_energy >= 100:
             self.battling.pk_energy = 100
-        D = Damage(self.battling.pk_fm_power,self.battling.Atk, other.battling.Def)
-        other.battling.HP -= D
-        other.battling.last_action_damage = D
+
         self.countT -= self.battling.pk_fm_turn
-        return D
+        return Damage(self.battling.pk_fm_power,self.battling.Atk, other.battling.Def)
     
     def charged_move1(self, other):
         other.receivedCM = True
@@ -285,25 +228,24 @@ class Team:
         self.countT -= self.battling.pk_cm2_turn
         return D 
     
-    def switch_teammate(self, down, up):       
-        if down in [self.firstOrder, self.secondOrder, self.thirdOrder]:
-            if down.HP <= 0:
-                down.OnStage = False
-                down.OnStageAble = False
-            else:
-                down.OnStage = False
-
-            if up in [self.firstOrder, self.secondOrder, self.thirdOrder] and up.OnStageAble == True:
-                # 將上場的 Pokemon 進入戰鬥
-                up.OnStage = True
-                #print(f"{up.name} 上場")
-                return 1
-            else:           
-                self.fault = True  
-                print("Team "+ f"{self.TeamID}"+" 全部角色皆陣亡！")
-                return 0
+    '''def switch_teammate(self, down, up):       
+        print(down)
+        if down.HP <= 0:
+            down.OnStage = False
+            down.OnStageAble = False
         else:
-            print(f"不屬於隊伍的角色！")
+            down.OnStage = False
+
+        if up.OnStageAble == True:
+            # 將上場的 Pokemon 進入戰鬥
+            up.OnStage = True
+            #print(f"{up.name} 上場")
+            return 1
+        else:           
+            self.fault = True  
+            print("Team "+ f"{self.TeamID}"+" 全部角色皆陣亡！")
+            return 0'''
+
 
 class Pokemon:
     def __init__(self, name, pk_fm, pk_cm1, pk_cm2, CP_limit):
@@ -384,92 +326,141 @@ class PokemonBattleEnv:
     OBSERVATION_SPACE_VALUES = (SIZE, SIZE, 3)  # 4
     OBSERVATION_SPACE_VALUES = np.expand_dims(OBSERVATION_SPACE_VALUES, axis = -1)
     ACTION_SPACE_SIZE = 6
+    
 
     def reset(self, team):
         self.team = team
-        #self.team2 = team2
         self.team_switch_clock = 60*2
-        #self.team1_switch_clock = 60*2
         self.team_shield = 2
         self.shieldusing = True
         self.switching = True
-        #self.team2_shield = 2
-        self.turns = time_slot
+        self.DD = 0
         self.team.fault = False
         return 1
 
     #Team的這一步做了甚麼、做得好不好
     def step(self, other, action):
+        with open('type.json', 'r', encoding="utf-8") as ty:
+            ttype = json.load(ty)
 
-        if other.team.fault == True or self.team.fault == True:
-            pass
-        else:
-            with open('type.json', 'r', encoding="utf-8") as ty:
-                ttype = json.load(ty)
+        PK_opp = 1
+        PK_slf = 1
+        PK_slf_oppfm = 1
+        PK_slf_oppcm1 = 1
+        PK_slf_oppcm2 = 1
 
-            PK_opp = 1
-            PK_slf = 1
-            PK_slf_oppfm = 1
-            PK_slf_oppcm1 = 1
-            PK_slf_oppcm2 = 1
+        PK_opp_slffm = 1
+        PK_opp_slfcm1 = 1
+        PK_opp_slfcm2 = 1
 
-            PK_opp_slffm = 1
-            PK_opp_slfcm1 = 1
-            PK_opp_slfcm2 = 1
+        reward = 1
+        done = False
+        
+        #不確定other, self的用法
+        pokemon_list = [self.team.firstOrder, self.team.secondOrder, self.team.thirdOrder] 
+        #換人冷卻計時+1
+        waste_time = 0
+        if self.team.battling.HP <= 0:
+            print("需要換人")
+            #搜尋可上場的替換角色
+            battle_able = []
+            for i in range(0,len(pokemon_list)):
+                if pokemon_list[i].OnStageAble == True and pokemon_list[i].OnStage == False:
+                    battle_able.append(i)
 
-            reward = 1
-            done = False
-            self.team.action(other.team,action)
-            #print(other.team.battling)
-            # 己方屬性是否劣勢，是則PK_TYPE_REWARD>0
-            if self.team.fault != True and other.team.fault != True:
-                for i in range(0,2):
-                    for j in range(0,2):
-                        PK_slf *=  ttype[f'{other.team.battling.type[i]}'][f'{self.team.battling.type[j]}']
-                        PK_slf_oppfm *=  ttype[f'{other.team.battling.pk_fm_type}'][f'{self.team.battling.type[j]}']
-                        PK_slf_oppcm1 *=  ttype[f'{other.team.battling.pk_cm1_type}'][f'{self.team.battling.type[j]}']
-                        PK_slf_oppcm2 *=  ttype[f'{other.team.battling.pk_cm2_type}'][f'{self.team.battling.type[j]}']
-                        
 
-                # 敵方屬性是否劣勢，是則PK_TYPE_REWARD>0
-                for i in range(0,2):
-                    for j in range(0,2):
-                        PK_opp *=  ttype[f'{self.team.battling.type[i]}'][f'{other.team.battling.type[j]}']
-                        PK_opp_slffm *=  ttype[f'{self.team.battling.pk_fm_type}'][f'{other.team.battling.type[j]}']
-                        PK_opp_slfcm1 *=  ttype[f'{self.team.battling.pk_cm1_type}'][f'{other.team.battling.type[j]}']
-                        PK_opp_slfcm2 *=  ttype[f'{self.team.battling.pk_cm2_type}'][f'{other.team.battling.type[j]}']
-                
-                next_state = [PK_opp, PK_slf]
-                if PK_opp/PK_slf >= 1:
-                    reward *= PK_opp/PK_slf/3
-                else:
-                    reward *= -1*PK_slf/PK_opp/3
-                reward -= (PK_slf_oppfm + PK_slf_oppcm1 + PK_slf_oppcm2)
-                reward += (PK_opp_slffm + PK_opp_slfcm1 + PK_opp_slfcm2)
-
-                with open('Pokemon_'+f'{self.team.CP_limit}'+'_default.json', 'r', encoding="utf-8") as json_file:
-                    all_data = json.load(json_file)
-
-                reward += (self.team.battling.HP/all_data[f'{self.team.battling.name}']['CurrentHP'] - other.team.battling.HP/all_data[f'{other.team.battling.name}']['CurrentHP'])/20
-                
-                reward += (self.team.battling.pk_energy/100 - other.team.battling.pk_energy/100)/20
-                self.turns -= 1
-                # 返回狀態、獎勵、終止條件
-                
-                if self.turns == 0:
-                    print("Draw")
-                    done = True
-                elif self.team.fault == True:
-                    print("Team "+f"{self.team.teamID}"+" Lose")
-                    done = True
-                elif other.team.fault == True:
-                    print("Oppenent Team "+f"{other.team.teamID}"+" Lose")
-                    done = True
-                
-                next_state = reward
-                return next_state, reward, done, action
+            #先隨機挑角色上場，機制後續須補上
+            #如果沒有可使用角色，則隊伍fault
+            if not battle_able:
+                self.team.fault = True
+                print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
             else:
-                return reward, reward, done, action
+                s = random.randint(0,len(battle_able)-1)
+                for pk in pokemon_list:
+                    if pk == self.team.battling:
+                        self.team.battling.OnStage = False
+                        self.team.battling.OnStageAble = False
+                self.team.battling = pokemon_list[battle_able[s]]
+                pokemon_list[battle_able[s]].OnStage = True
+ 
+            waste_time = random.randint(5, 20)
+            self.team.switchClock += waste_time
+            other.team.switchClock += waste_time
+            if self.team.countT > time_slot - waste_time:
+                self.team.countT = time_slot - waste_time
+            if other.team.countT > time_slot - waste_time:
+                other.team.countT = time_slot - waste_time
+        elif action == 4 and self.team.countT-1 == time_slot:
+            battle_able = []
+            for i in range(0,len(pokemon_list)):
+                if pokemon_list[i].OnStageAble == True and pokemon_list[i].OnStage == False:
+                    battle_able.append(i)
+
+
+            #先隨機挑角色上場，機制後續須補上
+            #如果沒有可使用角色，則隊伍fault
+            if not battle_able:
+                self.team.fault = True
+                print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
+            else:
+                s = random.randint(0,len(battle_able)-1)  
+                for pk in pokemon_list:
+                    if pk == self.team.battling:
+                        self.team.battling.OnStage = False
+                self.team.battling = pokemon_list[battle_able[s]]
+                pokemon_list[battle_able[s]].OnStage = True
+        elif self.team.countT-1 == time_slot:
+            if action == 0:
+                self.DD = self.team.fast_move(other.team)
+            elif action == 1:
+                self.team.charged_move1(other.team)
+            elif action == 2:
+                self.team.charged_move2(other.team)
+
+        if time_slot == self.team.countT:
+            other.team.battling.HP -= self.DD
+            other.team.battling.last_action_damage = self.DD
+            self.DD = 0
+
+        
+
+        # 己方屬性是否劣勢，是則PK_TYPE_REWARD>0
+        if self.team.fault != True and other.team.fault != True:
+            for i in range(0,2):
+                for j in range(0,2):
+                    PK_slf *=  ttype[f'{other.team.battling.type[i]}'][f'{self.team.battling.type[j]}']
+                    PK_slf_oppfm *=  ttype[f'{other.team.battling.pk_fm_type}'][f'{self.team.battling.type[j]}']
+                    PK_slf_oppcm1 *=  ttype[f'{other.team.battling.pk_cm1_type}'][f'{self.team.battling.type[j]}']
+                    PK_slf_oppcm2 *=  ttype[f'{other.team.battling.pk_cm2_type}'][f'{self.team.battling.type[j]}']
+                    
+
+            # 敵方屬性是否劣勢，是則PK_TYPE_REWARD>0
+            for i in range(0,2):
+                for j in range(0,2):
+                    PK_opp *=  ttype[f'{self.team.battling.type[i]}'][f'{other.team.battling.type[j]}']
+                    PK_opp_slffm *=  ttype[f'{self.team.battling.pk_fm_type}'][f'{other.team.battling.type[j]}']
+                    PK_opp_slfcm1 *=  ttype[f'{self.team.battling.pk_cm1_type}'][f'{other.team.battling.type[j]}']
+                    PK_opp_slfcm2 *=  ttype[f'{self.team.battling.pk_cm2_type}'][f'{other.team.battling.type[j]}']
+            
+            next_state = [PK_opp, PK_slf]
+            if PK_opp/PK_slf >= 1:
+                reward *= PK_opp/PK_slf/3
+            else:
+                reward *= -1*PK_slf/PK_opp/3
+            reward -= (PK_slf_oppfm + PK_slf_oppcm1 + PK_slf_oppcm2)
+            reward += (PK_opp_slffm + PK_opp_slfcm1 + PK_opp_slfcm2)
+
+            with open('Pokemon_'+f'{self.team.CP_limit}'+'_default.json', 'r', encoding="utf-8") as json_file:
+                all_data = json.load(json_file)
+
+            reward += (self.team.battling.HP/all_data[f'{self.team.battling.name}']['CurrentHP'] - other.team.battling.HP/all_data[f'{other.team.battling.name}']['CurrentHP'])/20
+            
+            reward += (self.team.battling.pk_energy/100 - other.team.battling.pk_energy/100)/20
+            
+            next_state = reward
+            return next_state, reward, done, action
+        else: 
+            return reward, reward, done, action
 
 # 創建 Pokemon 對戰的環境
 env = PokemonBattleEnv()
@@ -585,10 +576,7 @@ class DQNAgent:
         minibatch = random.sample(self.replay_memory, MINIBATCH_SIZE)
         
         current_states = np.asarray([transition[0] for transition in minibatch], dtype="object").astype('float32')
-        #print(current_states)
         current_qs_list = self.model.predict(current_states)
-        print('----------')
-        print(current_qs_list)
         new_current_states = np.asarray([transition[3] for transition in minibatch], dtype="object").astype('float32')
         future_qs_list = self.target_model.predict(new_current_states)
 
@@ -627,15 +615,114 @@ class DQNAgent:
         '''
     # Queries main network for Q values given current observation space (environment state)
     def get_qs(self, state):
-        print(self.model.predict(np.array(state).reshape(-1, *state.shape))[0])
-        return self.model.predict(np.array(state).reshape(-1, *state.shape))[0]
+        return self.model.predict(np.asarray([state], dtype="object").astype('float32'))[0]
+
+class DQNAgent2:
+    def __init__(self, model=None):
+        # 初始化 DQN 代理
+        if model is not None:
+            self.model = model
+            self.target_model = model
+        else:
+            self.model = self.create_model()
+            self.target_model = self.create_model()
+
+        
+        self.target_model.set_weights(self.model.get_weights())
+
+        self.replay_memory = deque(maxlen=REPLAY_MEMORY_SIZE)  # 記憶體，存儲先前的環境資訊
+
+        # Custom tensorboard object
+        self.tensorboard = ModifiedTensorBoard(log_dir="PokeDQN_logs/{}-{}".format(MODEL_NAME, int(time.time())))
+
+        # Used to count when to update target network with main network's weights
+        self.target_update_counter = 0
+
+        self.learning_rate = 0.001  # 模型的學習率
+        self.epsilon = 1.0 
+        
+        self.gamma = 0.95  # 折扣因子，控制未來獎勵的重要性
+        '''
+         # 探索率，隨機選擇行動的概率
+        self.epsilon_min = 0.01  # 最小探索率
+        self.epsilon_decay = 0.995  # 探索率的衰減率
+        '''
+        
+
+    def create_model(self):
+        # 構建深度神經網路模型
+        model = Sequential()
+        model.add(Dense(128, activation='relu'))  # ACTION_SPACE_SIZE = how many choices (9)
+        model.add(Dense(128, activation='relu'))  # ACTION_SPACE_SIZE = how many choices (9)
+        model.add(Dense(env.ACTION_SPACE_SIZE, activation='linear'))  # ACTION_SPACE_SIZE = how many choices (9)
+        model.compile(loss="mse", optimizer=adam_v2.Adam(lr=0.001))
+        model.build((32,1))
+        #model.summary()
+        return model
+
+    def update_replay_memory(self, transition):
+        #transition裡面有(?)(state, action, reward, next_state, done)
+        # 將環境資訊存入記憶體
+        
+        self.replay_memory.append(transition)
+
+    def train(self, terminal_state):
+        # 從記憶體中取樣一個小批次進行 Q-learning 更新模型
+        if len(self.replay_memory) < MIN_REPLAY_MEMORY_SIZE:
+            return
+        
+        minibatch = random.sample(self.replay_memory, MINIBATCH_SIZE)
+        
+        current_states = np.asarray([transition[0] for transition in minibatch], dtype="object").astype('float32')
+        current_qs_list = self.model.predict(current_states)
+        new_current_states = np.asarray([transition[3] for transition in minibatch], dtype="object").astype('float32')
+        future_qs_list = self.target_model.predict(new_current_states)
+
+        #current_state
+        X = []
+        #Q VALUE
+        Y = []
+        for index, (state, action, reward, next_state, done) in enumerate(minibatch):
+            if not done:
+                max_future_q = np.max(future_qs_list[index])
+                new_q = (reward + self.gamma * max_future_q)
+            else:
+                new_q = reward
+            # Update Q value for given state
+            current_qs = current_qs_list[index]
+            current_qs[action] = new_q
+
+            # And append to our training data
+            X.append(state)
+            Y.append(current_qs)
+            
+        self.model.fit(np.array(X), np.array(Y), batch_size=MINIBATCH_SIZE, verbose=0, shuffle=False, callbacks=[self.tensorboard] if terminal_state else None)
+
+        # Update target network counter every episode
+        if terminal_state:
+            self.target_update_counter += 1
+
+        # If counter reaches set value, update target network with weights of main network
+        if self.target_update_counter > UPDATE_TARGET_EVERY:
+            self.target_model.set_weights(self.model.get_weights())
+            self.target_update_counter = 0
+
+        '''
+        if self.epsilon > self.epsilon_min:
+            self.epsilon *= self.epsilon_decay  # 隨時間降低探索率
+        '''
+    # Queries main network for Q values given current observation space (environment state)
+    def get_qs(self, state):
+        return self.model.predict(np.asarray([state], dtype="object").astype('float32'))[0]
+
 
 agent = DQNAgent()
-agent2 = DQNAgent()
+agent2 = DQNAgent2()
 # 訓練DQN代理
-EPISODES = 101  # 可調整
+EPISODES = 1  # 可調整
 teamcount = 0
 for episode in range(EPISODES):
+    time_slot = 270*2
     # Update tensorboard step every episode
     agent.tensorboard.step = episode
 
@@ -650,46 +737,92 @@ for episode in range(EPISODES):
     
         
     state = env.reset(Team1)  # 獲得初始狀態
-    env2.reset(Team2)  # 獲得初始狀態
-    #print(state)
+    state2 = env2.reset(Team2)  # 獲得初始狀態
+
     
 
     #state = np.reshape(state, [1, env.OBSERVATION_SPACE_VALUES])
     done = False
-    #print(done)
     while not done:
-        
-        # This part stays mostly the same, the change is to query a model for Q values
-        if np.random.random() > agent.epsilon:
-            # Get action from Q table
-            print('4')
-            action = np.argmax(agent.get_qs(state))
-        else:
-            # Get random action
-            action = np.random.randint(0, env.ACTION_SPACE_SIZE)
+        print('第 '+str(540-time_slot)+' 回合, 隊伍一' +f'{env.team.battling.name}'+'剩餘血量:'f'{env.team.battling.HP}' + ', 隊伍二' +f'{env2.team.battling.name}'+'剩餘血量:'f'{env2.team.battling.HP}')
+        #print(time_slot)
+        time_slot -= 1 
+        env.team.switchClock += 1
+        env2.team.switchClock += 1
 
-        if env.team.fault != True and env2.team.fault != True:
-            env2.step(env,0)
-        else:
-            done = True
+        if time_slot > 0 and env.team.fault != True and env2.team.fault != True:
+            allowed2 = False    
+            s2= agent.get_qs(state2) 
+            while not allowed2:      
+                #print(s)
+                action = np.argmax(s2)
+                if action  == 0 and env2.team.battling.pk_energy < 100:
+                    allowed2 = True
+                elif action  == 1 and env2.team.battling.pk_energy >= -1*env2.team.battling.pk_cm1_energyLoss:
+                    allowed2 = True
+                elif action  == 2 and env2.team.battling.pk_energy >= -1*env2.team.battling.pk_cm2_energyLoss:
+                    allowed2 = True
+                elif action  == 3:
+                    if random.random()< 0.5:
+                        allowed2 = False
+                    else:
+                        allowed2 = False
+                elif action  == 4 and env2.team.switchClock >= 60:
+                    allowed2 = False
+                elif action == 5 and env2.team.receivedCM == True and env2.team.shield > 0:
+                    allowed2 = False
+                
+                s2[np.argmax(s2)] = s2[np.argmin(s2)] -1
+            next_state2, reward2, done2, ac = env2.step(env,action)  # 執行行動並獲得下一個狀態、獎勵和終止條件
+            
+            agent2.update_replay_memory((state2, action, reward2, next_state2, done))  # 存儲環境資訊
+            agent2.train(done2)
+            state2 = next_state2  # 更新狀態
 
-        if env.turns > 0 and env.team.fault != True and env2.team.fault != True:
+            allowed = False    
+            s= agent.get_qs(state) 
+            while not allowed:      
+                #print(s)
+                action = np.argmax(s)
+                if action  == 0 and env.team.battling.pk_energy < 100:
+                    allowed = True
+                elif action  == 1 and env.team.battling.pk_energy >= -1*env.team.battling.pk_cm1_energyLoss:
+                    allowed = True
+                elif action  == 2 and env.team.battling.pk_energy >= -1*env.team.battling.pk_cm2_energyLoss:
+                    allowed = True
+                elif action  == 3:
+                    if random.random()< 0.5:
+                        allowed = False
+                    else:
+                        allowed = False
+                elif action  == 4 and env.team.switchClock >= 60:
+                    allowed = False
+                elif action == 5 and env.team.receivedCM == True and env.team.shield > 0:
+                    allowed = False
+                    
+                s[np.argmax(s)] = s[np.argmin(s)] -1
             next_state, reward, done, ac = env.step(env2,action)  # 執行行動並獲得下一個狀態、獎勵和終止條件
-    
-            #print(env.team.battling.HP)
-            #print(env2.team.battling.HP)
+            
             episode_reward += reward
 
-            #next_state = np.reshape(next_state, [1, env.OBSERVATION_SPACE_VALUES])
             agent.update_replay_memory((state, action, reward, next_state, done))  # 存儲環境資訊
             agent.train(done)
             state = next_state  # 更新狀態
-        elif env.turns == 0 and env.team.fault != True and env2.team.fault != True:
+        
+
+        if time_slot == 0:
             print("Draw")
+            print('隊伍一' +f'{env.team.battling.name}'+'剩餘血量:'f'{env.team.battling.HP}' + ', 隊伍二' +f'{env2.team.battling.name}'+'剩餘血量:'f'{env2.team.battling.HP}')
             done = True
-
-
-    #print(done)
+        elif env.team.fault == True and env2.team.fault == True:
+            print("Team "+f"{env.team.TeamID}"+"and Team "+f"{env2.team.TeamID}"+" down at the same time")
+            done = True
+        elif env.team.fault == True:
+            print("Team "+f"{env.team.TeamID}"+" Lose")
+            done = True
+        elif env2.team.fault == True:
+            print("Oppenent Team "+f"{env2.team.TeamID}"+" Lose")
+            done = True
 
     ep_rewards.append(episode_reward)
     if not episode % AGGREGATE_STATS_EVERY or episode == 1:
