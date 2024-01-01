@@ -15,7 +15,7 @@ import cv2
 import json
 import math
 import random
-
+tf.compat.v1.disable_eager_execution()
 DISCOUNT = 0.99
 REPLAY_MEMORY_SIZE = 50_000  # How many last steps to keep for model training
 MIN_REPLAY_MEMORY_SIZE = 100  # Minimum number of steps in a memory to start training
@@ -577,12 +577,11 @@ class DQNAgent:
     def create_model(self):
         # 構建深度神經網路模型
         model = Sequential()
-        model.add(Dense(128, activation='relu'))  # ACTION_SPACE_SIZE = how many choices (9)
-        model.add(Dense(128, activation='relu'))  # ACTION_SPACE_SIZE = how many choices (9)
+        model.add(Dense(128, activation='relu', input_shape=(1,)))  # 請替換 your_input_dim 為實際的輸入維度
+        model.add(Dense(128, activation='relu'))
         model.add(Dense(env.ACTION_SPACE_SIZE, activation='linear'))  # ACTION_SPACE_SIZE = how many choices (9)
         model.compile(loss="mse", optimizer=adam_v2.Adam(lr=0.001))
-        model.build((32,1))
-        #model.summary()
+
         return model
 
     def update_replay_memory(self, transition):
@@ -637,6 +636,7 @@ class DQNAgent:
             self.epsilon *= self.epsilon_decay  # 隨時間降低探索率
         '''
     # Queries main network for Q values given current observation space (environment state)
+        
     def get_qs(self, state):
         return self.model.predict(np.asarray([state], dtype="object").astype('float32'))[0]
 
@@ -675,12 +675,10 @@ class DQNAgent2:
     def create_model(self):
         # 構建深度神經網路模型
         model = Sequential()
-        model.add(Dense(128, activation='relu'))  # ACTION_SPACE_SIZE = how many choices (9)
-        model.add(Dense(128, activation='relu'))  # ACTION_SPACE_SIZE = how many choices (9)
+        model.add(Dense(128, activation='relu', input_shape=(1,)))  # 請替換 your_input_dim 為實際的輸入維度
+        model.add(Dense(128, activation='relu'))
         model.add(Dense(env.ACTION_SPACE_SIZE, activation='linear'))  # ACTION_SPACE_SIZE = how many choices (9)
         model.compile(loss="mse", optimizer=adam_v2.Adam(lr=0.001))
-        model.build((32,1))
-        #model.summary()
         return model
 
     def update_replay_memory(self, transition):
@@ -739,6 +737,8 @@ class DQNAgent2:
         return self.model.predict(np.asarray([state], dtype="object").astype('float32'))[0]
 
 
+
+
 agent = DQNAgent()
 agent2 = DQNAgent2()
 # 訓練DQN代理
@@ -766,6 +766,7 @@ for episode in range(EPISODES):
 
     #state = np.reshape(state, [1, env.OBSERVATION_SPACE_VALUES])
     done = False
+
     while not done:
         print('第 '+str(540-time_slot)+' 回合, 隊伍一' +f'{env.team.battling.name}'+'剩餘血量:'f'{env.team.battling.HP}' + ', 隊伍二' +f'{env2.team.battling.name}'+'剩餘血量:'f'{env2.team.battling.HP}')
         #print(time_slot)
@@ -775,7 +776,7 @@ for episode in range(EPISODES):
 
         if time_slot > 0 and env.team.fault != True and env2.team.fault != True:
             allowed2 = False    
-            s2= agent.get_qs(state2) 
+            s2= agent2.get_qs(state2) 
             while not allowed2:      
                 #print(s)
                 action = np.argmax(s2)
@@ -801,7 +802,7 @@ for episode in range(EPISODES):
             agent2.update_replay_memory((state2, action, reward2, next_state2, done))  # 存儲環境資訊
             agent2.train(done2)
             state2 = next_state2  # 更新狀態
-
+ 
             allowed = False    
             s= agent.get_qs(state) 
             while not allowed:      
