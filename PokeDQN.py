@@ -92,60 +92,9 @@ class Team:
         4: 換人
         5: 開盾
         '''
-        
-        if self.countT == time_slot-1: 
-            #不確定other, self的用法
-            pokemon_list = [self.firstOrder, self.secondOrder, self.thirdOrder] 
-
-            if self.receivedCM == False:
-                if choice == 0:
-                    self.fast_move(other)
-                elif choice == 1:
-                    self.charged_move1(other)
-                elif choice == 2:
-                    self.charged_move2(other)
-                elif choice == 3:
-                    self.countT -= 1
-                    #print("不動作一回合")
-                elif choice == 4:
-                    battle_able = []
-                    for i in range(0,len(pokemon_list)):
-                        if pokemon_list[i].OnStageAble == True and pokemon_list[i].OnStage == False:
-                            battle_able.append(i)
-
-                    #先隨機挑角色上場，機制後續須補上
-                    if not battle_able:
-                        self.fault = True
-                    else:
-                        s = random.randint(0,len(battle_able)-1)
-                        for pk in pokemon_list:
-                            if pk == self.team.battling:
-                                self.team.battling.OnStage = False
-                                self.team.battling.OnStageAble = False
-                        self.team.battling = pokemon_list[battle_able[s]]
-                        pokemon_list[battle_able[s]].OnStage = True        
-                        self.switchClock = 0               
-            else:
-                if self.countT == time_slot and  choice == 4:
-                    battle_able = []
-                    for i in range(0,len(pokemon_list)):
-                        if pokemon_list[i].OnStageAble == True and pokemon_list[i].OnStage == False:
-                            battle_able.append(i)
-                            
-                    #先隨機挑角色上場，機制後續須補上
-                    if not battle_able:
-                        self.fault = True
-                    else:
-                        s = random.randint(0,len(battle_able)-1)
-                        for pk in pokemon_list:
-                            if pk == self.team.battling:
-                                self.team.battling.OnStage = False
-                        self.team.battling = pokemon_list[battle_able[s]]
-                        pokemon_list[battle_able[s]].OnStage = True
-                        self.switchClock = 0
-                elif choice == 5:
-                        self.shield -= 1
-                        self.battling.HP += other.battling.last_action_damage-1
+        '''elif choice == 5:
+            self.shield -= 1
+            self.battling.HP += other.battling.last_action_damage-1'''
             
 
     def fast_move(self, other):
@@ -368,15 +317,17 @@ class PokemonBattleEnv:
             else:
                 s = random.randint(0,len(battle_able)-1)
                 for pk in pokemon_list:
-                    if pk == self.team.battling:
-                        self.team.battling.OnStage = False
-                        self.team.battling.OnStageAble = False
+                    if pk.name == self.team.battling.name:
+                        pk.OnStage = False
+                        pk.HP = self.team.battling.HP
+                        pk.pk_energy = self.team.battling.pk_energy
+                        pk.OnStageAble = False
                 self.team.battling = pokemon_list[battle_able[s]]
                 pokemon_list[battle_able[s]].OnStage = True
 
             self.DD = 0
             self.EE = 0
-            self.WAIT = random.randint(5, 20)
+            self.WAIT = random.randint(6, 20)
 
             if other.team.battling.HP <= 0:
                 M = max(self.WAIT, other.WAIT)
@@ -391,7 +342,7 @@ class PokemonBattleEnv:
                 other.team.countT =  self.team.countT
             print("Team "+ f"{self.team.TeamID}"+'換人等待 '+f'{self.WAIT}'+' 秒')
             
-        elif action == 4 and self.team.countT-1 == time_slot:
+        elif action == 4 :
             self.DD = 0
             self.EE = 0
 
@@ -409,8 +360,11 @@ class PokemonBattleEnv:
             else:
                 s = random.randint(0,len(battle_able)-1)  
                 for pk in pokemon_list:
-                    if pk == self.team.battling:
-                        self.team.battling.OnStage = False
+                    if pk.name == self.team.battling.name:
+                        pk.OnStage = False
+                        pk.HP = self.team.battling.HP
+                        pk.pk_energy = self.team.battling.pk_energy
+                        pk.OnStageAble = True
                 self.team.battling = pokemon_list[battle_able[s]]
                 pokemon_list[battle_able[s]].OnStage = True
 
@@ -792,7 +746,7 @@ for episode in range(EPISODES):
                     else:
                         allowed2 = False
                 elif action  == 4 and env2.team.switchClock >= 60:
-                    allowed2 = False
+                    allowed2 = True
                 elif action == 5 and env2.team.receivedCM == True and env2.team.shield > 0:
                     allowed2 = False
                 
@@ -820,7 +774,7 @@ for episode in range(EPISODES):
                     else:
                         allowed = False
                 elif action  == 4 and env.team.switchClock >= 60:
-                    allowed = False
+                    allowed = True
                 elif action == 5 and env.team.receivedCM == True and env.team.shield > 0:
                     allowed = False
                     
@@ -856,7 +810,7 @@ for episode in range(EPISODES):
         agent.tensorboard.update_stats(reward_avg=average_reward, reward_min=min_reward, reward_max=max_reward, epsilon=epsilon)
 
         # Save model, but only when min reward is greater or equal a set value
-        if episode % 100 == 0:
+        if episode % 100 == 10:
             agent.model.save(f'models/{MODEL_NAME}__{max_reward:_>7.2f}max_{average_reward:_>7.2f}avg_{min_reward:_>7.2f}min__{int(time.time())}.model')
 
     # Decay epsilon
