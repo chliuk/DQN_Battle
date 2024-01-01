@@ -326,6 +326,7 @@ class PokemonBattleEnv:
         self.switching = True
         self.DD = 0
         self.EE = 0
+        self.WAIT = 0
         self.team.fault = False
         return 1
 
@@ -350,7 +351,6 @@ class PokemonBattleEnv:
         #不確定other, self的用法
         pokemon_list = [self.team.firstOrder, self.team.secondOrder, self.team.thirdOrder] 
         #換人冷卻計時+1
-        waste_time = 0
         if self.team.battling.HP <= 0:
             print("需要換人")
             #搜尋可上場的替換角色
@@ -373,15 +373,28 @@ class PokemonBattleEnv:
                         self.team.battling.OnStageAble = False
                 self.team.battling = pokemon_list[battle_able[s]]
                 pokemon_list[battle_able[s]].OnStage = True
- 
-            waste_time = random.randint(5, 20)
-            self.team.switchClock += waste_time
-            other.team.switchClock += waste_time
-            if self.team.countT > time_slot - waste_time:
-                self.team.countT = time_slot - waste_time
-            if other.team.countT > time_slot - waste_time:
-                other.team.countT = time_slot - waste_time
+
+            self.DD = 0
+            self.EE = 0
+            self.WAIT = random.randint(5, 20)
+
+            if other.team.battling.HP <= 0:
+                M = max(self.WAIT, other.WAIT)
+                self.WAIT = M
+                other.WAIT = M
+                
+            self.team.countT -= self.WAIT
+            other.team.countT = self.team.countT
+            if other.team.battling.HP <= 0:
+                other.DD = 0
+                other.EE = 0
+                other.team.countT =  self.team.countT
+            print("Team "+ f"{self.team.TeamID}"+'換人等待 '+f'{self.WAIT}'+' 秒')
+            
         elif action == 4 and self.team.countT-1 == time_slot:
+            self.DD = 0
+            self.EE = 0
+
             battle_able = []
             for i in range(0,len(pokemon_list)):
                 if pokemon_list[i].OnStageAble == True and pokemon_list[i].OnStage == False:
@@ -400,13 +413,22 @@ class PokemonBattleEnv:
                         self.team.battling.OnStage = False
                 self.team.battling = pokemon_list[battle_able[s]]
                 pokemon_list[battle_able[s]].OnStage = True
+
+            self.WAIT = 0
+            self.team.countT -= 1
+            self.team.switchClock = 0 
+            print('換上 '+f'{self.team.battling}')
         elif self.team.countT-1 == time_slot:
             if action == 0:
+                self.WAIT = 0
                 self.EE, self.DD = self.team.fast_move(other.team)
             elif action == 1:
+                self.WAIT = 0
                 self.EE, self.DD = self.team.charged_move1(other.team)
             elif action == 2:
+                self.WAIT = 0
                 self.EE, self.DD = self.team.charged_move2(other.team)
+ 
 
         if time_slot == self.team.countT:
             self.team.battling.pk_energy += self.EE
@@ -414,8 +436,14 @@ class PokemonBattleEnv:
                 self.team.battling.pk_energy = 100
             other.team.battling.HP -= self.DD
             other.team.battling.last_action_damage = self.DD
+
+            self.team.switchClock += self.WAIT
+            other.team.switchClock += self.WAIT
+
             self.DD = 0
             self.EE = 0
+            self.WAIT = 0
+
 
         
 
