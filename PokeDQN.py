@@ -167,12 +167,8 @@ class Team:
         elif ttype[self.battling.pk_fm_type][other.battling.pk_type2] == 0.391:
             self.battling.pk_fm_power *= Immune
         
-        self.battling.pk_energy += self.battling.pk_fm_energyGain
-        if  self.battling.pk_energy >= 100:
-            self.battling.pk_energy = 100
-
         self.countT -= self.battling.pk_fm_turn
-        return Damage(self.battling.pk_fm_power,self.battling.Atk, other.battling.Def)
+        return self.battling.pk_fm_energyGain, Damage(self.battling.pk_fm_power,self.battling.Atk, other.battling.Def)
     
     def charged_move1(self, other):
         other.receivedCM = True
@@ -195,11 +191,8 @@ class Team:
         elif ttype[self.battling.pk_cm1_type][other.battling.pk_type2] == 0.391:
             self.battling.pk_cm1_power *= Immune
 
-        self.battling.pk_energy += self.battling.pk_cm1_energyLoss
-        D = Damage(self.battling.pk_cm1_power,self.battling.Atk, other.battling.Def)
-        other.battling.HP -= D
         self.countT -= self.battling.pk_cm1_turn
-        return D
+        return self.battling.pk_cm1_energyLoss, Damage(self.battling.pk_cm1_power,self.battling.Atk, other.battling.Def)
 
     def charged_move2(self, other):
         other.receivedCM = True
@@ -222,11 +215,8 @@ class Team:
         elif ttype[self.battling.pk_cm2_type][other.battling.pk_type2] == 0.391:
             self.battling.pk_cm2_power *= Immune
 
-        self.battling.pk_energy += self.battling.pk_cm2_energyLoss
-        D = Damage(self.battling.pk_cm2_power,self.battling.Atk, other.battling.Def)
-        other.battling.HP -= D
         self.countT -= self.battling.pk_cm2_turn
-        return D 
+        return self.battling.pk_cm2_energyLoss, Damage(self.battling.pk_cm2_power,self.battling.Atk, other.battling.Def) 
     
     '''def switch_teammate(self, down, up):       
         print(down)
@@ -335,6 +325,7 @@ class PokemonBattleEnv:
         self.shieldusing = True
         self.switching = True
         self.DD = 0
+        self.EE = 0
         self.team.fault = False
         return 1
 
@@ -411,16 +402,20 @@ class PokemonBattleEnv:
                 pokemon_list[battle_able[s]].OnStage = True
         elif self.team.countT-1 == time_slot:
             if action == 0:
-                self.DD = self.team.fast_move(other.team)
+                self.EE, self.DD = self.team.fast_move(other.team)
             elif action == 1:
-                self.team.charged_move1(other.team)
+                self.EE, self.DD = self.team.charged_move1(other.team)
             elif action == 2:
-                self.team.charged_move2(other.team)
+                self.EE, self.DD = self.team.charged_move2(other.team)
 
         if time_slot == self.team.countT:
+            self.team.battling.pk_energy += self.EE
+            if self.team.battling.pk_energy >= 100:
+                self.team.battling.pk_energy = 100
             other.team.battling.HP -= self.DD
             other.team.battling.last_action_damage = self.DD
             self.DD = 0
+            self.EE = 0
 
         
 
