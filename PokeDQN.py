@@ -59,7 +59,7 @@ class Team:
         self.battling = Pokemon(pkList[0][0], pkList[0][1], pkList[0][2], pkList[0][3], CP_limit)
         self.battling.last_action_damage = 0
         self.shield = 2
-        self.switchClock = 60
+        self.switchClock = 60*2
         self.receivedCM = False
         self.CP_limit = CP_limit
         self.fault = False
@@ -75,27 +75,10 @@ class Team:
         self.battling = Pokemon(pkList[0][0], pkList[0][1], pkList[0][2], pkList[0][3], CP_limit)
         self.battling.last_action_damage = 0
         self.shield = 2
-        self.switchClock = 60
+        self.switchClock = 60*2
         self.receivedCM = False
         self.CP_limit = CP_limit
         self.fault = False
-
-        
-
-    def action(self, other, choice):
-        '''
-        Gives us 4 total movement options.
-        0: 小招
-        1: 大招一
-        2: 大招二
-        3: 停頓不動作
-        4: 換人
-        5: 開盾
-        '''
-        '''elif choice == 5:
-            self.shield -= 1
-            self.battling.HP += other.battling.last_action_damage-1'''
-            
 
     def fast_move(self, other):
         with open('type.json', 'r', encoding="utf-8") as ty:
@@ -209,7 +192,7 @@ class TeamTwo:
         self.battling = PokemonTwo(pkList[0][0], pkList[0][1], pkList[0][2], pkList[0][3], CP_limit)
         self.battling.last_action_damage = 0
         self.shield = 2
-        self.switchClock = 60
+        self.switchClock = 60*2
         self.receivedCM = False
         self.CP_limit = CP_limit
         self.fault = False
@@ -225,7 +208,7 @@ class TeamTwo:
         self.battling = PokemonTwo(pkList[0][0], pkList[0][1], pkList[0][2], pkList[0][3], CP_limit)
         self.battling.last_action_damage = 0
         self.shield = 2
-        self.switchClock = 60
+        self.switchClock = 60*2
         self.receivedCM = False
         self.CP_limit = CP_limit
         self.fault = False
@@ -643,14 +626,25 @@ class PokemonBattleEnv:
             elif action == 1:
                 self.WAIT = 0
                 self.EE, other.DD = self.team.charged_move1(other.team)
+                other.team.receivedCM = True
                 other.team.countT = self.team.countT
                 print("Team "+ f"{self.team.TeamID}"+" 使用大招一")
             elif action == 2:
                 self.WAIT = 0
                 self.EE, other.DD = self.team.charged_move2(other.team)
+                other.team.receivedCM = True
                 other.team.countT = self.team.countT
                 print("Team "+ f"{self.team.TeamID}"+" 使用大招二")
  
+        if self.team.receivedCM == True and self.team.shield >= 1 and self.team.countT-1 == time_slot:
+            if action == 5:
+                other.DD = 1
+                self.team.shield -= 1
+                
+                print("Team "+ f"{self.team.TeamID}"+" 開盾擋下了攻擊！")
+            self.team.receivedCM = False
+        elif self.team.receivedCM == True and self.team.shield ==0 and self.team.countT-1 == time_slot:
+            self.team.receivedCM = False
 
         if time_slot == self.team.countT:
             self.team.battling.pk_energy += self.EE
@@ -661,7 +655,7 @@ class PokemonBattleEnv:
 
             self.team.switchClock += self.WAIT
             other.team.switchClock += self.WAIT
-
+            self.team.receivedCM = False
             other.DD = 0
             self.EE = 0
             self.WAIT = 0
@@ -706,6 +700,7 @@ class PokemonBattleEnv:
             return next_state, reward, done, action
         else: 
             return reward, reward, done, action
+
 
 class PokemonBattleEnv2:
 
@@ -792,13 +787,15 @@ class PokemonBattleEnv2:
                 elif s == 2:
                     self.team.battling = self.team.thirdOrder
                     self.team.thirdOrder.OnStage = True
-            other.DD = 0
+
+            self.DD = 0
             self.EE = 0
             self.WAIT = random.randint(6, 20)
-            self.DD = 0
+            other.DD = 0
             other.EE = 0
             if other.team.battling.HP <= 0:
                 M = max(self.WAIT, other.WAIT)
+                print(M)
                 self.WAIT = M
                 other.WAIT = M
                 
@@ -810,6 +807,7 @@ class PokemonBattleEnv2:
         elif action == 4 and self.team.countT-1 == time_slot:
             other.DD = 0
             self.EE = 0
+
             battle_able = []
             if self.team.firstOrder.OnStageAble == True and self.team.firstOrder.OnStage == False and self.team.firstOrder !=self.team.battling:
                 battle_able.append(0)
@@ -826,17 +824,18 @@ class PokemonBattleEnv2:
                 print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
             else:
                 s = battle_able[random.randint(0,len(battle_able)-1)]
+            
                 if self.team.firstOrder.name == self.team.battling.name:
                     self.team.firstOrder.OnStage = False
                     self.team.firstOrder.HP = self.team.battling.HP
                     self.team.firstOrder.pk_energy = self.team.battling.pk_energy
                     self.team.firstOrder.OnStageAble = True
-                elif self.team.secondOrder.name == self.team.battling.name:
+                if self.team.secondOrder.name == self.team.battling.name:
                     self.team.secondOrder.OnStage = False
                     self.team.secondOrder.HP = self.team.battling.HP
                     self.team.secondOrder.pk_energy = self.team.battling.pk_energy
                     self.team.secondOrder.OnStageAble = True
-                elif self.team.thirdOrder.name == self.team.battling.name:
+                if self.team.thirdOrder.name == self.team.battling.name:
                     self.team.thirdOrder.OnStage = False
                     self.team.thirdOrder.HP = self.team.battling.HP
                     self.team.thirdOrder.pk_energy = self.team.battling.pk_energy
@@ -845,16 +844,17 @@ class PokemonBattleEnv2:
                 if s == 0:
                     self.team.battling = self.team.firstOrder
                     self.team.firstOrder.OnStage = True
-                elif s == 1:
+                if s == 1:
                     self.team.battling = self.team.secondOrder
                     self.team.secondOrder.OnStage = True
-                elif s == 2:
+                if s == 2:
                     self.team.battling = self.team.thirdOrder
                     self.team.thirdOrder.OnStage = True
-
             self.WAIT = 0
             self.team.countT -= 1
             self.team.switchClock = 0 
+
+            
             print('換上 '+f'{self.team.battling}')
         elif self.team.countT-1 == time_slot:
             if action == 0:
@@ -863,14 +863,25 @@ class PokemonBattleEnv2:
             elif action == 1:
                 self.WAIT = 0
                 self.EE, other.DD = self.team.charged_move1(other.team)
+                other.team.receivedCM = True
                 other.team.countT = self.team.countT
                 print("Team "+ f"{self.team.TeamID}"+" 使用大招一")
             elif action == 2:
                 self.WAIT = 0
                 self.EE, other.DD = self.team.charged_move2(other.team)
+                other.team.receivedCM = True
                 other.team.countT = self.team.countT
                 print("Team "+ f"{self.team.TeamID}"+" 使用大招二")
  
+        if self.team.receivedCM == True and self.team.shield >= 1 and self.team.countT-1 == time_slot:
+            if action == 5:
+                other.DD = 1
+                self.team.shield -= 1
+                
+                print("Team "+ f"{self.team.TeamID}"+" 開盾擋下了攻擊！")
+            self.team.receivedCM = False
+        elif self.team.receivedCM == True and self.team.shield ==0 and self.team.countT-1 == time_slot:
+            self.team.receivedCM = False
 
         if time_slot == self.team.countT:
             self.team.battling.pk_energy += self.EE
@@ -881,7 +892,7 @@ class PokemonBattleEnv2:
 
             self.team.switchClock += self.WAIT
             other.team.switchClock += self.WAIT
-
+            
             other.DD = 0
             self.EE = 0
             self.WAIT = 0
@@ -926,6 +937,7 @@ class PokemonBattleEnv2:
             return next_state, reward, done, action
         else: 
             return reward, reward, done, action
+
 
 # 創建 Pokemon 對戰的環境
 env = PokemonBattleEnv()
@@ -1241,21 +1253,33 @@ for episode in range(EPISODES):
             while not allowed2:      
                 #print(s)
                 action = np.argmax(s2)
-                if action  == 0 and env2.team.battling.pk_energy < 100:
-                    allowed2 = True
-                elif action  == 1 and env2.team.battling.pk_energy >= -1*env2.team.battling.pk_cm1_energyLoss:
-                    allowed2 = True
-                elif action  == 2 and env2.team.battling.pk_energy >= -1*env2.team.battling.pk_cm2_energyLoss:
-                    allowed2 = True
-                elif action  == 3:
-                    if random.random()< 0.5:
-                        allowed2 = False
-                    else:
-                        allowed2 = False
-                elif action  == 4 and env2.team.switchClock >= 60 and env2.switching == True:
-                    allowed2 = True
-                elif action == 5 and env2.team.receivedCM == True and env2.team.shield > 0:
-                    allowed2 = False
+                if env2.team.receivedCM == False:
+                    if action  == 0 and env2.team.battling.pk_energy < 100:
+                        allowed2 = True
+                    elif action  == 1 and env2.team.battling.pk_energy >= -1*env2.team.battling.pk_cm1_energyLoss:
+                        allowed2 = True
+                    elif action  == 2 and env2.team.battling.pk_energy >= -1*env2.team.battling.pk_cm2_energyLoss:
+                        allowed2 = True
+                    elif action  == 3:
+                        if random.random()< 0.5:
+                            allowed2 = False
+                        else:
+                            allowed2 = False
+                    elif action  == 4 and env2.team.switchClock >= 60*2 and env2.switching == True:
+                        allowed2 = True
+                elif env2.team.receivedCM == True:
+                    if env2.team.shield > 0:
+                        if action == 5:
+                            allowed2 = True
+                        elif action == 4 and env2.team.switchClock >= 60*2 and env2.switching == True:
+                            allowed2 = True
+                        elif action == 3:
+                            allowed2 = True
+                    else: 
+                        if action == 4:
+                            allowed2 = True
+                        elif action == 3:
+                            allowed2 = True  
                 
                 s2[np.argmax(s2)] = s2[np.argmin(s2)] -1
             next_state2, reward2, done2, ac = env2.step(env,action)  # 執行行動並獲得下一個狀態、獎勵和終止條件
@@ -1269,21 +1293,33 @@ for episode in range(EPISODES):
             while not allowed:      
                 #print(s)
                 action = np.argmax(s)
-                if action  == 0 and env.team.battling.pk_energy < 100:
-                    allowed = True
-                elif action  == 1 and env.team.battling.pk_energy >= -1*env.team.battling.pk_cm1_energyLoss:
-                    allowed = True
-                elif action  == 2 and env.team.battling.pk_energy >= -1*env.team.battling.pk_cm2_energyLoss:
-                    allowed = True
-                elif action  == 3:
-                    if random.random()< 0.5:
-                        allowed = False
-                    else:
-                        allowed = False
-                elif action  == 4 and env.team.switchClock >= 60 and env.switching == True:
-                    allowed = True
-                elif action == 5 and env.team.receivedCM == True and env.team.shield > 0:
-                    allowed = False
+                if env.team.receivedCM == False:
+                    if action  == 0 and env.team.battling.pk_energy < 100:
+                        allowed = True
+                    elif action  == 1 and env.team.battling.pk_energy >= -1*env.team.battling.pk_cm1_energyLoss:
+                        allowed = True
+                    elif action  == 2 and env.team.battling.pk_energy >= -1*env.team.battling.pk_cm2_energyLoss:
+                        allowed = True
+                    elif action  == 3:
+                        if random.random()< 0.5:
+                            allowed = False
+                        else:
+                            allowed = False
+                    elif action  == 4 and env.team.switchClock >= 60*2 and env.switching == True:
+                        allowed = True
+                elif env.team.receivedCM == True:
+                    if env.team.shield > 0:
+                        if action == 5:
+                            allowed = True
+                        elif action == 4:
+                            allowed = True
+                        elif action == 3:
+                            allowed = True
+                    else: 
+                        if action == 4 and env.team.switchClock >= 60*2 and env.switching == True:
+                            allowed = True
+                        elif action == 3:
+                            allowed = True  
                     
                 s[np.argmax(s)] = s[np.argmin(s)] -1
             next_state, reward, done, ac = env.step(env2,action)  # 執行行動並獲得下一個狀態、獎勵和終止條件
