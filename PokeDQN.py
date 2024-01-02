@@ -56,7 +56,7 @@ class Team:
         self.thirdOrder = Pokemon(pkList[2][0], pkList[2][1], pkList[2][2], pkList[2][3], CP_limit)
         self.TeamID = teamID
         self.firstOrder.OnStage = True
-        self.battling = self.firstOrder
+        self.battling = Pokemon(pkList[0][0], pkList[0][1], pkList[0][2], pkList[0][3], CP_limit)
         self.battling.last_action_damage = 0
         self.shield = 2
         self.switchClock = 60
@@ -149,7 +149,7 @@ class Team:
             self.battling.pk_cm1_power *= 1
 
         self.countT -= 20
-        return -1*self.battling.pk_cm1_energyLoss, Damage(self.battling.pk_cm1_power,self.battling.Atk, other.battling.Def)
+        return self.battling.pk_cm1_energyLoss, Damage(self.battling.pk_cm1_power,self.battling.Atk, other.battling.Def)
 
     def charged_move2(self, other):
         other.receivedCM = True
@@ -177,7 +177,157 @@ class Team:
             self.battling.pk_cm2_power *= 1
 
         self.countT -= 20
-        return -1*self.battling.pk_cm2_energyLoss, Damage(self.battling.pk_cm2_power,self.battling.Atk, other.battling.Def) 
+        return self.battling.pk_cm2_energyLoss, Damage(self.battling.pk_cm2_power,self.battling.Atk, other.battling.Def) 
+    
+    '''def switch_teammate(self, down, up):       
+        print(down)
+        if down.HP <= 0:
+            down.OnStage = False
+            down.OnStageAble = False
+        else:
+            down.OnStage = False
+
+        if up.OnStageAble == True:
+            # 將上場的 Pokemon 進入戰鬥
+            up.OnStage = True
+            #print(f"{up.name} 上場")
+            return 1
+        else:           
+            self.fault = True  
+            print("Team "+ f"{self.TeamID}"+" 全部角色皆陣亡！")
+            return 0'''
+
+
+class TeamTwo:
+    def __init__(self, pkList, teamID, CP_limit):
+        self.countT = time_slot
+        self.firstOrder = PokemonTwo(pkList[0][0], pkList[0][1], pkList[0][2], pkList[0][3], CP_limit)
+        self.secondOrder = PokemonTwo(pkList[1][0], pkList[1][1], pkList[1][2], pkList[1][3], CP_limit)
+        self.thirdOrder = PokemonTwo(pkList[2][0], pkList[2][1], pkList[2][2], pkList[2][3], CP_limit)
+        self.TeamID = teamID
+        self.firstOrder.OnStage = True
+        self.battling = PokemonTwo(pkList[0][0], pkList[0][1], pkList[0][2], pkList[0][3], CP_limit)
+        self.battling.last_action_damage = 0
+        self.shield = 2
+        self.switchClock = 60
+        self.receivedCM = False
+        self.CP_limit = CP_limit
+        self.fault = False
+
+
+    def reset(self, pkList, teamID, CP_limit):
+        self.countT = time_slot
+        self.firstOrder = PokemonTwo(pkList[0][0], pkList[0][1], pkList[0][2], pkList[0][3], CP_limit)
+        self.secondOrder = PokemonTwo(pkList[1][0], pkList[1][1], pkList[1][2], pkList[1][3], CP_limit)
+        self.thirdOrder = PokemonTwo(pkList[2][0], pkList[2][1], pkList[2][2], pkList[2][3], CP_limit)
+        self.TeamID = teamID
+        self.firstOrder.OnStage = True
+        self.battling = PokemonTwo(pkList[0][0], pkList[0][1], pkList[0][2], pkList[0][3], CP_limit)
+        self.battling.last_action_damage = 0
+        self.shield = 2
+        self.switchClock = 60
+        self.receivedCM = False
+        self.CP_limit = CP_limit
+        self.fault = False
+
+        
+
+    def action(self, other, choice):
+        '''
+        Gives us 4 total movement options.
+        0: 小招
+        1: 大招一
+        2: 大招二
+        3: 停頓不動作
+        4: 換人
+        5: 開盾
+        '''
+        '''elif choice == 5:
+            self.shield -= 1
+            self.battling.HP += other.battling.last_action_damage-1'''
+            
+
+    def fast_move(self, other):
+        with open('type.json', 'r', encoding="utf-8") as ty:
+            ttype = json.load(ty)
+
+        #計算屬性相剋傷害加成
+        if ttype[self.battling.pk_fm_type][other.battling.pk_type1] == 1.6:
+            self.battling.pk_fm_power *= SuperEffective
+        elif ttype[self.battling.pk_fm_type][other.battling.pk_type1] == 0.625:
+            self.battling.pk_fm_power *= Not_Very_Effective
+        elif ttype[self.battling.pk_fm_type][other.battling.pk_type1] == 0.391:
+            self.battling.pk_fm_power *= Immune
+        elif ttype[self.battling.pk_fm_type][other.battling.pk_type1] == 1:
+            self.battling.pk_fm_power *= 1
+
+        if ttype[self.battling.pk_fm_type][other.battling.pk_type2] == 1.6:
+            self.battling.pk_fm_power *= SuperEffective
+        elif ttype[self.battling.pk_fm_type][other.battling.pk_type2] == 0.625:
+            self.battling.pk_fm_power *= Not_Very_Effective
+        elif ttype[self.battling.pk_fm_type][other.battling.pk_type2] == 0.391:
+            self.battling.pk_fm_power *= Immune
+        elif ttype[self.battling.pk_fm_type][other.battling.pk_type2] == 1:
+            self.battling.pk_fm_power *= 1
+        
+        self.countT -= self.battling.pk_fm_turn
+        return self.battling.pk_fm_energyGain, Damage(self.battling.pk_fm_power,self.battling.Atk, other.battling.Def)
+    
+    def charged_move1(self, other):
+        other.receivedCM = True
+
+        with open('type.json', 'r', encoding="utf-8") as ty:
+            ttype = json.load(ty)
+
+        #計算屬性相剋傷害加成
+        if ttype[self.battling.pk_cm1_type][other.battling.pk_type1] == 1.6:
+            self.battling.pk_cm1_power *= SuperEffective
+        elif ttype[self.battling.pk_cm1_type][other.battling.pk_type1] == 0.625:
+            self.battling.pk_cm1_power *= Not_Very_Effective
+        elif ttype[self.battling.pk_cm1_type][other.battling.pk_type1] == 0.391:
+            self.battling.pk_cm1_power *= Immune
+        elif ttype[self.battling.pk_cm1_type][other.battling.pk_type1] == 1:
+            self.battling.pk_cm1_power *= 1
+
+        if ttype[self.battling.pk_cm1_type][other.battling.pk_type2] == 1.6:
+            self.battling.pk_cm1_power *= SuperEffective
+        elif ttype[self.battling.pk_cm1_type][other.battling.pk_type2] == 0.625:
+            self.battling.pk_cm1_power *= Not_Very_Effective
+        elif ttype[self.battling.pk_cm1_type][other.battling.pk_type2] == 0.391:
+            self.battling.pk_cm1_power *= Immune
+        elif ttype[self.battling.pk_cm1_type][other.battling.pk_type2] == 1:
+            self.battling.pk_cm1_power *= 1
+
+        self.countT -= 20
+        return self.battling.pk_cm1_energyLoss, Damage(self.battling.pk_cm1_power,self.battling.Atk, other.battling.Def)
+
+    def charged_move2(self, other):
+        other.receivedCM = True
+
+        with open('type.json', 'r', encoding="utf-8") as ty:
+            ttype = json.load(ty)
+
+        #計算屬性相剋傷害加成
+        if ttype[self.battling.pk_cm2_type][other.battling.pk_type1] == 1.6:
+            self.battling.pk_cm2_power *= SuperEffective
+        elif ttype[self.battling.pk_cm2_type][other.battling.pk_type1] == 0.625:
+            self.battling.pk_cm2_power *= Not_Very_Effective
+        elif ttype[self.battling.pk_cm2_type][other.battling.pk_type1] == 0.391:
+            self.battling.pk_cm2_power *= Immune
+        elif ttype[self.battling.pk_cm2_type][other.battling.pk_type1] == 1:
+            self.battling.pk_cm2_power *= 1
+
+        if ttype[self.battling.pk_cm2_type][other.battling.pk_type2] == 1.6:
+            self.battling.pk_cm2_power *= SuperEffective
+        elif ttype[self.battling.pk_cm2_type][other.battling.pk_type2] == 0.625:
+            self.battling.pk_cm2_power *= Not_Very_Effective
+        elif ttype[self.battling.pk_cm2_type][other.battling.pk_type2] == 0.391:
+            self.battling.pk_cm2_power *= Immune
+        elif ttype[self.battling.pk_cm2_type][other.battling.pk_type2] == 1:
+            self.battling.pk_cm2_power *= 1
+
+        self.countT -= 20
+        return self.battling.pk_cm2_energyLoss, Damage(self.battling.pk_cm2_power,self.battling.Atk, other.battling.Def) 
     
     '''def switch_teammate(self, down, up):       
         print(down)
@@ -259,8 +409,69 @@ class Pokemon:
         if self.pk_cm2_type == self.pk_type2:
             self.pk_cm2_power *= STAB
 
+class PokemonTwo:
+    def __init__(self, name, pk_fm, pk_cm1, pk_cm2, CP_limit):
+        self.name = name
+
+        self.TeamID = 0
+        self.OnStage = False
+        self.OnStageAble = True
+
+        self.last_action_damage = 0
+
+        with open('Pokemon_'+str(CP_limit)+'_default.json', 'r', encoding="utf-8") as json_file:
+            all_data = json.load(json_file) 
+
+        self.Atk = all_data[name]['CurrentAtk']
+        self.Def = all_data[name]['CurrentDef']
+        self.HP= all_data[name]['CurrentHP']
+        self.pk_energy = 0
+        
+
+        self.AtkIV = all_data[name]['DefaultAtkIV']
+        self.DefIV = all_data[name]['DefaulDefIV']
+        self.StaIV = all_data[name]['DefaulStaIV']
+        self.Lv = all_data[name]['DefaulLV']
+
+        with open('moves.json', 'r') as m:
+            mov = json.load(m)
+        for move_data in mov:
+            if move_data.get('moveId') == pk_fm:
+                self.pk_fm_type =  move_data.get('type')
+                self.pk_fm_power =  move_data.get('power')
+                self.pk_fm_energyGain =  move_data.get('energyGain')
+                self.pk_fm_turn =  move_data.get('cooldown')/500
+            elif move_data.get('moveId') == pk_cm1:
+                self.pk_cm1_type =  move_data.get('type')
+                self.pk_cm1_power =  move_data.get('power')
+                self.pk_cm1_energyLoss =  -1*move_data.get('energy')
+                self.pk_cm1_turn =  1
+            elif move_data.get('moveId') == pk_cm2:
+                self.pk_cm2_type =  move_data.get('type')
+                self.pk_cm2_power =  move_data.get('power')
+                self.pk_cm2_energyLoss =  -1*move_data.get('energy')
+                self.pk_cm2_turn =  1
+
+        [self.pk_type1, self.pk_type2]= all_data[name]['type']
+        self.type = [self.pk_type1, self.pk_type2]
+        #算pk的屬修
+        if self.pk_fm_type == self.pk_type1:
+            self.pk_fm_power *= STAB
+        if self.pk_fm_type == self.pk_type2:
+            self.pk_fm_power *= STAB
+
+        if self.pk_cm1_type == self.pk_type1:
+            self.pk_cm1_power *= STAB
+        if self.pk_cm1_type == self.pk_type2:
+            self.pk_cm1_power *= STAB
+
+        if self.pk_cm2_type == self.pk_type1:
+            self.pk_cm2_power *= STAB
+        if self.pk_cm2_type == self.pk_type2:
+            self.pk_cm2_power *= STAB
+
 T1 = [["妙蛙花","VINE_WHIP", "FRENZY_PLANT", "SLUDGE_BOMB"],
-        ["天蠍","WING_ATTACK", "AERIAL_ACE", "DIG"],
+        ["杖尾鱗甲龍", "DRAGON_TAIL", "FLAMETHROWER", "BOOMBURST"],
         ["電燈怪","SPARK", "SURF", "THUNDERBOLT"]]
 T2 = [["盔甲鳥","STEEL_WING", "SKY_ATTACK", "BRAVE_BIRD"],
         ["巨沼怪","MUD_SHOT", "HYDRO_CANNON", "EARTHQUAKE"],
@@ -268,7 +479,7 @@ T2 = [["盔甲鳥","STEEL_WING", "SKY_ATTACK", "BRAVE_BIRD"],
 
 Team1 = Team(T1,1,1500)
 #Team1.receivedCM = True
-Team2 = Team(T2,2,1500)
+Team2 = TeamTwo(T2,2,1500)
 #Team2.action(Team1,0)
 
 class PokemonBattleEnv:
@@ -316,9 +527,12 @@ class PokemonBattleEnv:
             print("需要換人")
             #搜尋可上場的替換角色
             battle_able = []
-            for i in range(0,len(pokemon_list)):
-                if pokemon_list[i].OnStageAble == True and pokemon_list[i].OnStage == False:
-                    battle_able.append(i)
+            if self.team.firstOrder.OnStageAble == True and self.team.firstOrder.OnStage == False and self.team.firstOrder !=self.team.battling:
+                battle_able.append(0)
+            if self.team.secondOrder.OnStageAble == True and self.team.secondOrder.OnStage == False and self.team.secondOrder !=self.team.battling:
+                battle_able.append(1)
+            if self.team.thirdOrder.OnStageAble == True and self.team.thirdOrder.OnStage == False and self.team.thirdOrder !=self.team.battling:
+                battle_able.append(2)
 
 
             #先隨機挑角色上場，機制後續須補上
@@ -327,20 +541,262 @@ class PokemonBattleEnv:
                 self.team.fault = True
                 print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
             else:
-                s = random.randint(0,len(battle_able)-1)
-                for pk in pokemon_list:
-                    if pk.name == self.team.battling.name:
-                        pk.OnStage = False
-                        pk.HP = self.team.battling.HP
-                        pk.pk_energy = self.team.battling.pk_energy
-                        pk.OnStageAble = False
-                self.team.battling = pokemon_list[battle_able[s]]
-                pokemon_list[battle_able[s]].OnStage = True
+                s = battle_able[random.randint(0,len(battle_able)-1)]
+                if self.team.firstOrder.name == self.team.battling.name:
+                    self.team.firstOrder.OnStage = False
+                    self.team.firstOrder.HP = self.team.battling.HP
+                    self.team.firstOrder.pk_energy = self.team.battling.pk_energy
+                    self.team.firstOrder.OnStageAble = False
+                elif self.team.secondOrder.name == self.team.battling.name:
+                    self.team.secondOrder.OnStage = False
+                    self.team.secondOrder.HP = self.team.battling.HP
+                    self.team.secondOrder.pk_energy = self.team.battling.pk_energy
+                    self.team.secondOrder.OnStageAble = False
+                elif self.team.thirdOrder.name == self.team.battling.name:
+                    self.team.thirdOrder.OnStage = False
+                    self.team.thirdOrder.HP = self.team.battling.HP
+                    self.team.thirdOrder.pk_energy = self.team.battling.pk_energy
+                    self.team.thirdOrder.OnStageAble = False
+
+                if s == 0:
+                    self.team.battling = self.team.firstOrder
+                    self.team.firstOrder.OnStage = True
+                elif s == 1:
+                    self.team.battling = self.team.secondOrder
+                    self.team.secondOrder.OnStage = True
+                elif s == 2:
+                    self.team.battling = self.team.thirdOrder
+                    self.team.thirdOrder.OnStage = True
 
             self.DD = 0
             self.EE = 0
             self.WAIT = random.randint(6, 20)
+            other.DD = 0
+            other.EE = 0
+            if other.team.battling.HP <= 0:
+                M = max(self.WAIT, other.WAIT)
+                print(M)
+                self.WAIT = M
+                other.WAIT = M
+                
+            self.team.countT -= self.WAIT
+            other.team.countT = self.team.countT
+            
+            print("Team "+ f"{self.team.TeamID}"+'換人等待 '+f'{self.WAIT}'+' 秒')
+            
+        elif action == 4 and self.team.countT-1 == time_slot:
+            other.DD = 0
+            self.EE = 0
 
+            battle_able = []
+            if self.team.firstOrder.OnStageAble == True and self.team.firstOrder.OnStage == False and self.team.firstOrder !=self.team.battling:
+                battle_able.append(0)
+            if self.team.secondOrder.OnStageAble == True and self.team.secondOrder.OnStage == False and self.team.secondOrder !=self.team.battling:
+                battle_able.append(1)
+            if self.team.thirdOrder.OnStageAble == True and self.team.thirdOrder.OnStage == False and self.team.thirdOrder !=self.team.battling:
+                battle_able.append(2)
+
+
+            #先隨機挑角色上場，機制後續須補上
+            #如果沒有可使用角色，則隊伍fault
+            if not battle_able:
+                self.team.fault = True
+                print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
+            else:
+                s = battle_able[random.randint(0,len(battle_able)-1)]
+            
+                if self.team.firstOrder.name == self.team.battling.name:
+                    self.team.firstOrder.OnStage = False
+                    self.team.firstOrder.HP = self.team.battling.HP
+                    self.team.firstOrder.pk_energy = self.team.battling.pk_energy
+                    self.team.firstOrder.OnStageAble = True
+                if self.team.secondOrder.name == self.team.battling.name:
+                    self.team.secondOrder.OnStage = False
+                    self.team.secondOrder.HP = self.team.battling.HP
+                    self.team.secondOrder.pk_energy = self.team.battling.pk_energy
+                    self.team.secondOrder.OnStageAble = True
+                if self.team.thirdOrder.name == self.team.battling.name:
+                    self.team.thirdOrder.OnStage = False
+                    self.team.thirdOrder.HP = self.team.battling.HP
+                    self.team.thirdOrder.pk_energy = self.team.battling.pk_energy
+                    self.team.thirdOrder.OnStageAble = True
+
+                if s == 0:
+                    self.team.battling = self.team.firstOrder
+                    self.team.firstOrder.OnStage = True
+                if s == 1:
+                    self.team.battling = self.team.secondOrder
+                    self.team.secondOrder.OnStage = True
+                if s == 2:
+                    self.team.battling = self.team.thirdOrder
+                    self.team.thirdOrder.OnStage = True
+            self.WAIT = 0
+            self.team.countT -= 1
+            self.team.switchClock = 0 
+
+            
+            print('換上 '+f'{self.team.battling}')
+        elif self.team.countT-1 == time_slot:
+            if action == 0:
+                self.WAIT = 0
+                self.EE, other.DD = self.team.fast_move(other.team)
+            elif action == 1:
+                self.WAIT = 0
+                self.EE, other.DD = self.team.charged_move1(other.team)
+                other.team.countT = self.team.countT
+                print("Team "+ f"{self.team.TeamID}"+" 使用大招一")
+            elif action == 2:
+                self.WAIT = 0
+                self.EE, other.DD = self.team.charged_move2(other.team)
+                other.team.countT = self.team.countT
+                print("Team "+ f"{self.team.TeamID}"+" 使用大招二")
+ 
+
+        if time_slot == self.team.countT:
+            self.team.battling.pk_energy += self.EE
+            if self.team.battling.pk_energy >= 100:
+                self.team.battling.pk_energy = 100
+            other.team.battling.HP -= other.DD
+            other.team.battling.last_action_damage = other.DD
+
+            self.team.switchClock += self.WAIT
+            other.team.switchClock += self.WAIT
+
+            other.DD = 0
+            self.EE = 0
+            self.WAIT = 0
+
+
+        
+
+        # 己方屬性是否劣勢，是則PK_TYPE_REWARD>0
+        if self.team.fault != True and other.team.fault != True:
+            for i in range(0,2):
+                for j in range(0,2):
+                    PK_slf *=  ttype[f'{other.team.battling.type[i]}'][f'{self.team.battling.type[j]}']
+                    PK_slf_oppfm *=  ttype[f'{other.team.battling.pk_fm_type}'][f'{self.team.battling.type[j]}']
+                    PK_slf_oppcm1 *=  ttype[f'{other.team.battling.pk_cm1_type}'][f'{self.team.battling.type[j]}']
+                    PK_slf_oppcm2 *=  ttype[f'{other.team.battling.pk_cm2_type}'][f'{self.team.battling.type[j]}']
+                    
+
+            # 敵方屬性是否劣勢，是則PK_TYPE_REWARD>0
+            for i in range(0,2):
+                for j in range(0,2):
+                    PK_opp *=  ttype[f'{self.team.battling.type[i]}'][f'{other.team.battling.type[j]}']
+                    PK_opp_slffm *=  ttype[f'{self.team.battling.pk_fm_type}'][f'{other.team.battling.type[j]}']
+                    PK_opp_slfcm1 *=  ttype[f'{self.team.battling.pk_cm1_type}'][f'{other.team.battling.type[j]}']
+                    PK_opp_slfcm2 *=  ttype[f'{self.team.battling.pk_cm2_type}'][f'{other.team.battling.type[j]}']
+            
+            next_state = [PK_opp, PK_slf]
+            if PK_opp/PK_slf >= 1:
+                reward *= PK_opp/PK_slf/3
+            else:
+                reward *= -1*PK_slf/PK_opp/3
+            reward -= (PK_slf_oppfm + PK_slf_oppcm1 + PK_slf_oppcm2)
+            reward += (PK_opp_slffm + PK_opp_slfcm1 + PK_opp_slfcm2)
+
+            with open('Pokemon_'+f'{self.team.CP_limit}'+'_default.json', 'r', encoding="utf-8") as json_file:
+                all_data = json.load(json_file)
+
+            reward += (self.team.battling.HP/all_data[f'{self.team.battling.name}']['CurrentHP'] - other.team.battling.HP/all_data[f'{other.team.battling.name}']['CurrentHP'])/20
+            
+            reward += (self.team.battling.pk_energy/100 - other.team.battling.pk_energy/100)/20
+            
+            next_state = reward
+            return next_state, reward, done, action
+        else: 
+            return reward, reward, done, action
+
+class PokemonBattleEnv2:
+
+    SIZE = 10
+    OBSERVATION_SPACE_VALUES = (SIZE, SIZE, 3)  # 4
+    OBSERVATION_SPACE_VALUES = np.expand_dims(OBSERVATION_SPACE_VALUES, axis = -1)
+    ACTION_SPACE_SIZE = 6
+    
+
+    def reset(self, team):
+        self.team = team
+        self.team_switch_clock = 60*2
+        self.team_shield = 2
+        self.shieldusing = True
+        self.switching = True
+        self.DD = 0
+        self.EE = 0
+        self.WAIT = 0
+        self.team.fault = False
+        return 1
+
+    #Team的這一步做了甚麼、做得好不好
+    def step(self, other, action):
+        with open('type.json', 'r', encoding="utf-8") as ty:
+            ttype = json.load(ty)
+
+        PK_opp = 1
+        PK_slf = 1
+        PK_slf_oppfm = 1
+        PK_slf_oppcm1 = 1
+        PK_slf_oppcm2 = 1
+
+        PK_opp_slffm = 1
+        PK_opp_slfcm1 = 1
+        PK_opp_slfcm2 = 1
+
+        reward = 1
+        done = False
+        
+        #不確定other, self的用法
+        pokemon_list = [self.team.firstOrder, self.team.secondOrder, self.team.thirdOrder] 
+        #換人冷卻計時+1
+        if self.team.battling.HP <= 0:
+            print("需要換人")
+            #搜尋可上場的替換角色
+            battle_able = []
+            if self.team.firstOrder.OnStageAble == True and self.team.firstOrder.OnStage == False and self.team.firstOrder !=self.team.battling:
+                battle_able.append(0)
+            if self.team.secondOrder.OnStageAble == True and self.team.secondOrder.OnStage == False and self.team.secondOrder !=self.team.battling:
+                battle_able.append(1)
+            if self.team.thirdOrder.OnStageAble == True and self.team.thirdOrder.OnStage == False and self.team.thirdOrder !=self.team.battling:
+                battle_able.append(2)
+
+
+            #先隨機挑角色上場，機制後續須補上
+            #如果沒有可使用角色，則隊伍fault
+            if not battle_able:
+                self.team.fault = True
+                print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
+            else:
+                s = battle_able[random.randint(0,len(battle_able)-1)]
+                if self.team.firstOrder.name == self.team.battling.name:
+                    self.team.firstOrder.OnStage = False
+                    self.team.firstOrder.HP = self.team.battling.HP
+                    self.team.firstOrder.pk_energy = self.team.battling.pk_energy
+                    self.team.firstOrder.OnStageAble = False
+                elif self.team.secondOrder.name == self.team.battling.name:
+                    self.team.secondOrder.OnStage = False
+                    self.team.secondOrder.HP = self.team.battling.HP
+                    self.team.secondOrder.pk_energy = self.team.battling.pk_energy
+                    self.team.secondOrder.OnStageAble = False
+                elif self.team.thirdOrder.name == self.team.battling.name:
+                    self.team.thirdOrder.OnStage = False
+                    self.team.thirdOrder.HP = self.team.battling.HP
+                    self.team.thirdOrder.pk_energy = self.team.battling.pk_energy
+                    self.team.thirdOrder.OnStageAble = False
+
+                if s == 0:
+                    self.team.battling = self.team.firstOrder
+                    self.team.firstOrder.OnStage = True
+                elif s == 1:
+                    self.team.battling = self.team.secondOrder
+                    self.team.secondOrder.OnStage = True
+                elif s == 2:
+                    self.team.battling = self.team.thirdOrder
+                    self.team.thirdOrder.OnStage = True
+            other.DD = 0
+            self.EE = 0
+            self.WAIT = random.randint(6, 20)
+            self.DD = 0
+            other.EE = 0
             if other.team.battling.HP <= 0:
                 M = max(self.WAIT, other.WAIT)
                 self.WAIT = M
@@ -348,20 +804,19 @@ class PokemonBattleEnv:
                 
             self.team.countT -= self.WAIT
             other.team.countT = self.team.countT
-            if other.team.battling.HP <= 0:
-                other.DD = 0
-                other.EE = 0
-                other.team.countT =  self.team.countT
+            
             print("Team "+ f"{self.team.TeamID}"+'換人等待 '+f'{self.WAIT}'+' 秒')
             
         elif action == 4 and self.team.countT-1 == time_slot:
-            self.DD = 0
+            other.DD = 0
             self.EE = 0
-
             battle_able = []
-            for i in range(0,len(pokemon_list)):
-                if pokemon_list[i].OnStageAble == True and pokemon_list[i].OnStage == False:
-                    battle_able.append(i)
+            if self.team.firstOrder.OnStageAble == True and self.team.firstOrder.OnStage == False and self.team.firstOrder !=self.team.battling:
+                battle_able.append(0)
+            if self.team.secondOrder.OnStageAble == True and self.team.secondOrder.OnStage == False and self.team.secondOrder !=self.team.battling:
+                battle_able.append(1)
+            if self.team.thirdOrder.OnStageAble == True and self.team.thirdOrder.OnStage == False and self.team.thirdOrder !=self.team.battling:
+                battle_able.append(2)
 
 
             #先隨機挑角色上場，機制後續須補上
@@ -370,15 +825,32 @@ class PokemonBattleEnv:
                 self.team.fault = True
                 print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
             else:
-                s = random.randint(0,len(battle_able)-1)  
-                for pk in pokemon_list:
-                    if pk.name == self.team.battling.name:
-                        pk.OnStage = False
-                        pk.HP = self.team.battling.HP
-                        pk.pk_energy = self.team.battling.pk_energy
-                        pk.OnStageAble = True
-                self.team.battling = pokemon_list[battle_able[s]]
-                pokemon_list[battle_able[s]].OnStage = True
+                s = battle_able[random.randint(0,len(battle_able)-1)]
+                if self.team.firstOrder.name == self.team.battling.name:
+                    self.team.firstOrder.OnStage = False
+                    self.team.firstOrder.HP = self.team.battling.HP
+                    self.team.firstOrder.pk_energy = self.team.battling.pk_energy
+                    self.team.firstOrder.OnStageAble = True
+                elif self.team.secondOrder.name == self.team.battling.name:
+                    self.team.secondOrder.OnStage = False
+                    self.team.secondOrder.HP = self.team.battling.HP
+                    self.team.secondOrder.pk_energy = self.team.battling.pk_energy
+                    self.team.secondOrder.OnStageAble = True
+                elif self.team.thirdOrder.name == self.team.battling.name:
+                    self.team.thirdOrder.OnStage = False
+                    self.team.thirdOrder.HP = self.team.battling.HP
+                    self.team.thirdOrder.pk_energy = self.team.battling.pk_energy
+                    self.team.thirdOrder.OnStageAble = True
+
+                if s == 0:
+                    self.team.battling = self.team.firstOrder
+                    self.team.firstOrder.OnStage = True
+                elif s == 1:
+                    self.team.battling = self.team.secondOrder
+                    self.team.secondOrder.OnStage = True
+                elif s == 2:
+                    self.team.battling = self.team.thirdOrder
+                    self.team.thirdOrder.OnStage = True
 
             self.WAIT = 0
             self.team.countT -= 1
@@ -387,26 +859,30 @@ class PokemonBattleEnv:
         elif self.team.countT-1 == time_slot:
             if action == 0:
                 self.WAIT = 0
-                self.EE, self.DD = self.team.fast_move(other.team)
+                self.EE, other.DD = self.team.fast_move(other.team)
             elif action == 1:
                 self.WAIT = 0
-                self.EE, self.DD = self.team.charged_move1(other.team)
+                self.EE, other.DD = self.team.charged_move1(other.team)
+                other.team.countT = self.team.countT
+                print("Team "+ f"{self.team.TeamID}"+" 使用大招一")
             elif action == 2:
                 self.WAIT = 0
-                self.EE, self.DD = self.team.charged_move2(other.team)
+                self.EE, other.DD = self.team.charged_move2(other.team)
+                other.team.countT = self.team.countT
+                print("Team "+ f"{self.team.TeamID}"+" 使用大招二")
  
 
         if time_slot == self.team.countT:
             self.team.battling.pk_energy += self.EE
             if self.team.battling.pk_energy >= 100:
                 self.team.battling.pk_energy = 100
-            other.team.battling.HP -= self.DD
-            other.team.battling.last_action_damage = self.DD
+            other.team.battling.HP -= other.DD
+            other.team.battling.last_action_damage = other.DD
 
             self.team.switchClock += self.WAIT
             other.team.switchClock += self.WAIT
 
-            self.DD = 0
+            other.DD = 0
             self.EE = 0
             self.WAIT = 0
 
@@ -454,7 +930,7 @@ class PokemonBattleEnv:
 # 創建 Pokemon 對戰的環境
 env = PokemonBattleEnv()
 
-env2 = PokemonBattleEnv()
+env2 = PokemonBattleEnv2()
 
 
 
