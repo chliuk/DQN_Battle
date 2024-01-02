@@ -108,6 +108,8 @@ class Team:
             self.battling.pk_fm_power *= Not_Very_Effective
         elif ttype[self.battling.pk_fm_type][other.battling.pk_type1] == 0.391:
             self.battling.pk_fm_power *= Immune
+        elif ttype[self.battling.pk_fm_type][other.battling.pk_type1] == 1:
+            self.battling.pk_fm_power *= 1
 
         if ttype[self.battling.pk_fm_type][other.battling.pk_type2] == 1.6:
             self.battling.pk_fm_power *= SuperEffective
@@ -115,6 +117,8 @@ class Team:
             self.battling.pk_fm_power *= Not_Very_Effective
         elif ttype[self.battling.pk_fm_type][other.battling.pk_type2] == 0.391:
             self.battling.pk_fm_power *= Immune
+        elif ttype[self.battling.pk_fm_type][other.battling.pk_type2] == 1:
+            self.battling.pk_fm_power *= 1
         
         self.countT -= self.battling.pk_fm_turn
         return self.battling.pk_fm_energyGain, Damage(self.battling.pk_fm_power,self.battling.Atk, other.battling.Def)
@@ -132,6 +136,8 @@ class Team:
             self.battling.pk_cm1_power *= Not_Very_Effective
         elif ttype[self.battling.pk_cm1_type][other.battling.pk_type1] == 0.391:
             self.battling.pk_cm1_power *= Immune
+        elif ttype[self.battling.pk_cm1_type][other.battling.pk_type1] == 1:
+            self.battling.pk_cm1_power *= 1
 
         if ttype[self.battling.pk_cm1_type][other.battling.pk_type2] == 1.6:
             self.battling.pk_cm1_power *= SuperEffective
@@ -139,9 +145,11 @@ class Team:
             self.battling.pk_cm1_power *= Not_Very_Effective
         elif ttype[self.battling.pk_cm1_type][other.battling.pk_type2] == 0.391:
             self.battling.pk_cm1_power *= Immune
+        elif ttype[self.battling.pk_cm1_type][other.battling.pk_type2] == 1:
+            self.battling.pk_cm1_power *= 1
 
-        self.countT -= self.battling.pk_cm1_turn
-        return self.battling.pk_cm1_energyLoss, Damage(self.battling.pk_cm1_power,self.battling.Atk, other.battling.Def)
+        self.countT -= 20
+        return -1*self.battling.pk_cm1_energyLoss, Damage(self.battling.pk_cm1_power,self.battling.Atk, other.battling.Def)
 
     def charged_move2(self, other):
         other.receivedCM = True
@@ -156,6 +164,8 @@ class Team:
             self.battling.pk_cm2_power *= Not_Very_Effective
         elif ttype[self.battling.pk_cm2_type][other.battling.pk_type1] == 0.391:
             self.battling.pk_cm2_power *= Immune
+        elif ttype[self.battling.pk_cm2_type][other.battling.pk_type1] == 1:
+            self.battling.pk_cm2_power *= 1
 
         if ttype[self.battling.pk_cm2_type][other.battling.pk_type2] == 1.6:
             self.battling.pk_cm2_power *= SuperEffective
@@ -163,9 +173,11 @@ class Team:
             self.battling.pk_cm2_power *= Not_Very_Effective
         elif ttype[self.battling.pk_cm2_type][other.battling.pk_type2] == 0.391:
             self.battling.pk_cm2_power *= Immune
+        elif ttype[self.battling.pk_cm2_type][other.battling.pk_type2] == 1:
+            self.battling.pk_cm2_power *= 1
 
-        self.countT -= self.battling.pk_cm2_turn
-        return self.battling.pk_cm2_energyLoss, Damage(self.battling.pk_cm2_power,self.battling.Atk, other.battling.Def) 
+        self.countT -= 20
+        return -1*self.battling.pk_cm2_energyLoss, Damage(self.battling.pk_cm2_power,self.battling.Atk, other.battling.Def) 
     
     '''def switch_teammate(self, down, up):       
         print(down)
@@ -342,7 +354,7 @@ class PokemonBattleEnv:
                 other.team.countT =  self.team.countT
             print("Team "+ f"{self.team.TeamID}"+'換人等待 '+f'{self.WAIT}'+' 秒')
             
-        elif action == 4 :
+        elif action == 4 and self.team.countT-1 == time_slot:
             self.DD = 0
             self.EE = 0
 
@@ -690,9 +702,6 @@ class DQNAgent2:
     def get_qs(self, state):
         return self.model.predict(np.asarray([state], dtype="object").astype('float32'))[0]
 
-
-
-
 agent = DQNAgent()
 agent2 = DQNAgent2()
 # 訓練DQN代理
@@ -728,6 +737,28 @@ for episode in range(EPISODES):
         env.team.switchClock += 1
         env2.team.switchClock += 1
 
+        down2_count = 0
+        if env2.team.firstOrder.OnStageAble == False:
+            down2_count += 1
+        if env2.team.secondOrder.OnStageAble == False:
+            down2_count += 1
+        if env2.team.thirdOrder.OnStageAble == False:
+            down2_count += 1
+
+        if down2_count >= 2:
+            env2.switching = False
+
+        down_count = 0
+        if env.team.firstOrder.OnStageAble == False:
+            down_count += 1
+        if env.team.secondOrder.OnStageAble == False:
+            down_count += 1
+        if env.team.thirdOrder.OnStageAble == False:
+            down_count += 1
+
+        if down_count >= 2:
+            env.switching = False
+
         if time_slot > 0 and env.team.fault != True and env2.team.fault != True:
             allowed2 = False    
             s2= agent2.get_qs(state2) 
@@ -745,7 +776,7 @@ for episode in range(EPISODES):
                         allowed2 = False
                     else:
                         allowed2 = False
-                elif action  == 4 and env2.team.switchClock >= 60:
+                elif action  == 4 and env2.team.switchClock >= 60 and env2.switching == True:
                     allowed2 = True
                 elif action == 5 and env2.team.receivedCM == True and env2.team.shield > 0:
                     allowed2 = False
@@ -773,7 +804,7 @@ for episode in range(EPISODES):
                         allowed = False
                     else:
                         allowed = False
-                elif action  == 4 and env.team.switchClock >= 60:
+                elif action  == 4 and env.team.switchClock >= 60 and env.switching == True:
                     allowed = True
                 elif action == 5 and env.team.receivedCM == True and env.team.shield > 0:
                     allowed = False
