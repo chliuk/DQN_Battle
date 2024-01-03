@@ -46,7 +46,7 @@ Immune = 0.390625
 time_slot = 270*2
 
 def Damage(atkpk_power,atkpk_ATK,defpk_DEF):
-    return math.floor(0.5*atkpk_power*atkpk_ATK/defpk_DEF*1.3)+1
+    return math.floor(0.5*atkpk_power*atkpk_ATK*1.3/defpk_DEF)+1
 
 class Team:
     def __init__(self, pkList, teamID, CP_limit):
@@ -84,6 +84,11 @@ class Team:
         with open('type.json', 'r', encoding="utf-8") as ty:
             ttype = json.load(ty)
 
+        with open('moves.json', 'r', encoding="utf-8") as mv:
+            mov = json.load(mv)
+        for move_data in mov:
+            if move_data.get('moveId') == self.battling.fm:
+                self.battling.pk_fm_power =  move_data.get('power')
         #計算屬性相剋傷害加成
         if ttype[self.battling.pk_fm_type][other.battling.pk_type1] == 1.6:
             self.battling.pk_fm_power *= SuperEffective
@@ -103,6 +108,11 @@ class Team:
         elif ttype[self.battling.pk_fm_type][other.battling.pk_type2] == 1:
             self.battling.pk_fm_power *= 1
         
+        if self.battling.pk_fm_type == self.battling.pk_type1:
+            self.battling.pk_fm_power *= STAB
+        if self.battling.pk_fm_type == self.battling.pk_type2:
+            self.battling.pk_fm_power *= STAB
+
         self.countT -= self.battling.pk_fm_turn
         return self.battling.pk_fm_energyGain, Damage(self.battling.pk_fm_power,self.battling.Atk, other.battling.Def)
     
@@ -111,7 +121,11 @@ class Team:
 
         with open('type.json', 'r', encoding="utf-8") as ty:
             ttype = json.load(ty)
-
+        with open('moves.json', 'r', encoding="utf-8") as mv:
+            mov = json.load(mv)
+        for move_data in mov:
+            if move_data.get('moveId') == self.battling.cm1:
+                self.battling.pk_cm1_power =  move_data.get('power')
         #計算屬性相剋傷害加成
         if ttype[self.battling.pk_cm1_type][other.battling.pk_type1] == 1.6:
             self.battling.pk_cm1_power *= SuperEffective
@@ -131,6 +145,10 @@ class Team:
         elif ttype[self.battling.pk_cm1_type][other.battling.pk_type2] == 1:
             self.battling.pk_cm1_power *= 1
 
+        if self.battling.pk_cm1_type == self.battling.pk_type1:
+            self.battling.pk_cm1_power *= STAB
+        if self.battling.pk_cm1_type == self.battling.pk_type2:
+            self.battling.pk_cm1_power *= STAB
         self.countT -= 20
         return self.battling.pk_cm1_energyLoss, Damage(self.battling.pk_cm1_power,self.battling.Atk, other.battling.Def)
 
@@ -139,7 +157,11 @@ class Team:
 
         with open('type.json', 'r', encoding="utf-8") as ty:
             ttype = json.load(ty)
-
+        with open('moves.json', 'r', encoding="utf-8") as mv:
+            mov = json.load(mv)
+        for move_data in mov:
+            if move_data.get('moveId') == self.battling.cm2:
+                self.battling.pk_cm2_power =  move_data.get('power')
         #計算屬性相剋傷害加成
         if ttype[self.battling.pk_cm2_type][other.battling.pk_type1] == 1.6:
             self.battling.pk_cm2_power *= SuperEffective
@@ -159,6 +181,10 @@ class Team:
         elif ttype[self.battling.pk_cm2_type][other.battling.pk_type2] == 1:
             self.battling.pk_cm2_power *= 1
 
+        if self.battling.pk_cm2_type == self.battling.pk_type1:
+            self.battling.pk_cm2_power *= STAB
+        if self.battling.pk_cm2_type == self.battling.pk_type2:
+            self.battling.pk_cm2_power *= STAB
         self.countT -= 20
         return self.battling.pk_cm2_energyLoss, Damage(self.battling.pk_cm2_power,self.battling.Atk, other.battling.Def) 
     
@@ -233,7 +259,11 @@ class TeamTwo:
     def fast_move(self, other):
         with open('type.json', 'r', encoding="utf-8") as ty:
             ttype = json.load(ty)
-
+        with open('moves.json', 'r', encoding="utf-8") as mv:
+            mov = json.load(mv)
+        for move_data in mov:
+            if move_data.get('moveId') == self.battling.fm:
+                self.battling.pk_fm_power =  move_data.get('power')
         #計算屬性相剋傷害加成
         if ttype[self.battling.pk_fm_type][other.battling.pk_type1] == 1.6:
             self.battling.pk_fm_power *= SuperEffective
@@ -253,6 +283,11 @@ class TeamTwo:
         elif ttype[self.battling.pk_fm_type][other.battling.pk_type2] == 1:
             self.battling.pk_fm_power *= 1
         
+        if self.battling.pk_fm_type == self.battling.pk_type1:
+            self.battling.pk_fm_power *= STAB
+        if self.battling.pk_fm_type == self.battling.pk_type2:
+            self.battling.pk_fm_power *= STAB
+
         self.countT -= self.battling.pk_fm_turn
         return self.battling.pk_fm_energyGain, Damage(self.battling.pk_fm_power,self.battling.Atk, other.battling.Def)
     
@@ -261,7 +296,11 @@ class TeamTwo:
 
         with open('type.json', 'r', encoding="utf-8") as ty:
             ttype = json.load(ty)
-
+        with open('moves.json', 'r', encoding="utf-8") as mv:
+            mov = json.load(mv)
+        for move_data in mov:
+            if move_data.get('moveId') == self.battling.cm1:
+                self.battling.pk_cm1_power =  move_data.get('power')
         #計算屬性相剋傷害加成
         if ttype[self.battling.pk_cm1_type][other.battling.pk_type1] == 1.6:
             self.battling.pk_cm1_power *= SuperEffective
@@ -281,6 +320,11 @@ class TeamTwo:
         elif ttype[self.battling.pk_cm1_type][other.battling.pk_type2] == 1:
             self.battling.pk_cm1_power *= 1
 
+        if self.battling.pk_cm1_type == self.battling.pk_type1:
+            self.battling.pk_cm1_power *= STAB
+        if self.battling.pk_cm1_type == self.battling.pk_type2:
+            self.battling.pk_cm1_power *= STAB
+
         self.countT -= 20
         return self.battling.pk_cm1_energyLoss, Damage(self.battling.pk_cm1_power,self.battling.Atk, other.battling.Def)
 
@@ -289,26 +333,43 @@ class TeamTwo:
 
         with open('type.json', 'r', encoding="utf-8") as ty:
             ttype = json.load(ty)
-
+        with open('moves.json', 'r', encoding="utf-8") as mv:
+            mov = json.load(mv)
+        for move_data in mov:
+            if move_data.get('moveId') == self.battling.cm2:
+                self.battling.pk_cm2_power =  move_data.get('power')
         #計算屬性相剋傷害加成
         if ttype[self.battling.pk_cm2_type][other.battling.pk_type1] == 1.6:
             self.battling.pk_cm2_power *= SuperEffective
+            print(self.battling.pk_cm2_power)
         elif ttype[self.battling.pk_cm2_type][other.battling.pk_type1] == 0.625:
             self.battling.pk_cm2_power *= Not_Very_Effective
+            print(self.battling.pk_cm2_power)
         elif ttype[self.battling.pk_cm2_type][other.battling.pk_type1] == 0.391:
             self.battling.pk_cm2_power *= Immune
+            print(self.battling.pk_cm2_power)
         elif ttype[self.battling.pk_cm2_type][other.battling.pk_type1] == 1:
             self.battling.pk_cm2_power *= 1
+            print(self.battling.pk_cm2_power)
 
         if ttype[self.battling.pk_cm2_type][other.battling.pk_type2] == 1.6:
             self.battling.pk_cm2_power *= SuperEffective
+            print(self.battling.pk_cm2_power)
         elif ttype[self.battling.pk_cm2_type][other.battling.pk_type2] == 0.625:
             self.battling.pk_cm2_power *= Not_Very_Effective
+            print(self.battling.pk_cm2_power)
         elif ttype[self.battling.pk_cm2_type][other.battling.pk_type2] == 0.391:
             self.battling.pk_cm2_power *= Immune
+            print(self.battling.pk_cm2_power)
         elif ttype[self.battling.pk_cm2_type][other.battling.pk_type2] == 1:
             self.battling.pk_cm2_power *= 1
+            print(self.battling.pk_cm2_power)
 
+        if self.battling.pk_cm2_type == self.battling.pk_type1:
+            self.battling.pk_cm2_power *= STAB
+        if self.battling.pk_cm2_type == self.battling.pk_type2:
+            self.battling.pk_cm2_power *= STAB
+        
         self.countT -= 20
         return self.battling.pk_cm2_energyLoss, Damage(self.battling.pk_cm2_power,self.battling.Atk, other.battling.Def) 
     
@@ -338,7 +399,9 @@ class Pokemon:
         self.TeamID = 0
         self.OnStage = False
         self.OnStageAble = True
-
+        self.fm = pk_fm
+        self.cm1 = pk_cm1
+        self.cm2 = pk_cm2
         self.last_action_damage = 0
 
         with open('Pokemon_'+str(CP_limit)+'_default.json', 'r', encoding="utf-8") as json_file:
@@ -377,7 +440,7 @@ class Pokemon:
         [self.pk_type1, self.pk_type2]= all_data[name]['type']
         self.type = [self.pk_type1, self.pk_type2]
         #算pk的屬修
-        if self.pk_fm_type == self.pk_type1:
+        '''if self.pk_fm_type == self.pk_type1:
             self.pk_fm_power *= STAB
         if self.pk_fm_type == self.pk_type2:
             self.pk_fm_power *= STAB
@@ -390,7 +453,7 @@ class Pokemon:
         if self.pk_cm2_type == self.pk_type1:
             self.pk_cm2_power *= STAB
         if self.pk_cm2_type == self.pk_type2:
-            self.pk_cm2_power *= STAB
+            self.pk_cm2_power *= STAB'''
 
 class PokemonTwo:
     def __init__(self, name, pk_fm, pk_cm1, pk_cm2, CP_limit):
@@ -399,7 +462,9 @@ class PokemonTwo:
         self.TeamID = 0
         self.OnStage = False
         self.OnStageAble = True
-
+        self.fm = pk_fm
+        self.cm1 = pk_cm1
+        self.cm2 = pk_cm2
         self.last_action_damage = 0
 
         with open('Pokemon_'+str(CP_limit)+'_default.json', 'r', encoding="utf-8") as json_file:
@@ -438,7 +503,7 @@ class PokemonTwo:
         [self.pk_type1, self.pk_type2]= all_data[name]['type']
         self.type = [self.pk_type1, self.pk_type2]
         #算pk的屬修
-        if self.pk_fm_type == self.pk_type1:
+        '''if self.pk_fm_type == self.pk_type1:
             self.pk_fm_power *= STAB
         if self.pk_fm_type == self.pk_type2:
             self.pk_fm_power *= STAB
@@ -451,7 +516,7 @@ class PokemonTwo:
         if self.pk_cm2_type == self.pk_type1:
             self.pk_cm2_power *= STAB
         if self.pk_cm2_type == self.pk_type2:
-            self.pk_cm2_power *= STAB
+            self.pk_cm2_power *= STAB'''
 
 T1 = [["妙蛙花","VINE_WHIP", "FRENZY_PLANT", "SLUDGE_BOMB"],
         ["杖尾鱗甲龍", "DRAGON_TAIL", "FLAMETHROWER", "BOOMBURST"],
@@ -507,6 +572,7 @@ class PokemonBattleEnv:
         pokemon_list = [self.team.firstOrder, self.team.secondOrder, self.team.thirdOrder] 
         #換人冷卻計時+1
         if self.team.battling.HP <= 0:
+            self.team.receivedCM = False
             print("需要換人")
             #搜尋可上場的替換角色
             battle_able = []
@@ -628,13 +694,13 @@ class PokemonBattleEnv:
                 self.EE, other.DD = self.team.charged_move1(other.team)
                 other.team.receivedCM = True
                 other.team.countT = self.team.countT
-                print("Team "+ f"{self.team.TeamID}"+" 使用大招一")
+                print("Team "+ f"{self.team.TeamID}"+" 使用大招一, 造成傷害："+f'{other.DD}')
             elif action == 2:
                 self.WAIT = 0
                 self.EE, other.DD = self.team.charged_move2(other.team)
                 other.team.receivedCM = True
                 other.team.countT = self.team.countT
-                print("Team "+ f"{self.team.TeamID}"+" 使用大招二")
+                print("Team "+ f"{self.team.TeamID}"+" 使用大招二, 造成傷害："+f"{other.DD}")
  
         if self.team.receivedCM == True and self.team.shield >= 1 and self.team.countT-1 == time_slot:
             if action == 5:
@@ -643,7 +709,7 @@ class PokemonBattleEnv:
                 
                 print("Team "+ f"{self.team.TeamID}"+" 開盾擋下了攻擊！")
             self.team.receivedCM = False
-        elif self.team.receivedCM == True and self.team.shield ==0 and self.team.countT-1 == time_slot:
+        elif self.team.receivedCM == True and self.team.shield ==0 and self.team.countT == time_slot:
             self.team.receivedCM = False
 
         if time_slot == self.team.countT:
@@ -651,7 +717,7 @@ class PokemonBattleEnv:
             if self.team.battling.pk_energy >= 100:
                 self.team.battling.pk_energy = 100
             other.team.battling.HP -= other.DD
-            other.team.battling.last_action_damage = other.DD
+            
 
             self.team.switchClock += self.WAIT
             other.team.switchClock += self.WAIT
@@ -744,6 +810,7 @@ class PokemonBattleEnv2:
         pokemon_list = [self.team.firstOrder, self.team.secondOrder, self.team.thirdOrder] 
         #換人冷卻計時+1
         if self.team.battling.HP <= 0:
+            self.team.receivedCM = False
             print("需要換人")
             #搜尋可上場的替換角色
             battle_able = []
@@ -865,13 +932,13 @@ class PokemonBattleEnv2:
                 self.EE, other.DD = self.team.charged_move1(other.team)
                 other.team.receivedCM = True
                 other.team.countT = self.team.countT
-                print("Team "+ f"{self.team.TeamID}"+" 使用大招一")
+                print("Team "+ f"{self.team.TeamID}"+" 使用大招一, 造成傷害："+f"{other.DD}")
             elif action == 2:
                 self.WAIT = 0
                 self.EE, other.DD = self.team.charged_move2(other.team)
                 other.team.receivedCM = True
                 other.team.countT = self.team.countT
-                print("Team "+ f"{self.team.TeamID}"+" 使用大招二")
+                print("Team "+ f"{self.team.TeamID}"+" 使用大招二, 造成傷害："+f"{other.DD}")
  
         if self.team.receivedCM == True and self.team.shield >= 1 and self.team.countT-1 == time_slot:
             if action == 5:
@@ -880,7 +947,7 @@ class PokemonBattleEnv2:
                 
                 print("Team "+ f"{self.team.TeamID}"+" 開盾擋下了攻擊！")
             self.team.receivedCM = False
-        elif self.team.receivedCM == True and self.team.shield ==0 and self.team.countT-1 == time_slot:
+        elif self.team.receivedCM == True and self.team.shield ==0 and self.team.countT == time_slot:
             self.team.receivedCM = False
 
         if time_slot == self.team.countT:
@@ -888,11 +955,10 @@ class PokemonBattleEnv2:
             if self.team.battling.pk_energy >= 100:
                 self.team.battling.pk_energy = 100
             other.team.battling.HP -= other.DD
-            other.team.battling.last_action_damage = other.DD
 
             self.team.switchClock += self.WAIT
             other.team.switchClock += self.WAIT
-            
+            self.team.receivedCM = False
             other.DD = 0
             self.EE = 0
             self.WAIT = 0
@@ -1250,6 +1316,7 @@ for episode in range(EPISODES):
         if time_slot > 0 and env.team.fault != True and env2.team.fault != True:
             allowed2 = False    
             s2= agent2.get_qs(state2) 
+            #print(env2.team.receivedCM)
             while not allowed2:      
                 #print(s)
                 action = np.argmax(s2)
@@ -1280,8 +1347,9 @@ for episode in range(EPISODES):
                             allowed2 = True
                         elif action == 3:
                             allowed2 = True  
-                
+                #print(action)
                 s2[np.argmax(s2)] = s2[np.argmin(s2)] -1
+            
             next_state2, reward2, done2, ac = env2.step(env,action)  # 執行行動並獲得下一個狀態、獎勵和終止條件
             
             agent2.update_replay_memory((state2, action, reward2, next_state2, done))  # 存儲環境資訊
@@ -1290,6 +1358,7 @@ for episode in range(EPISODES):
  
             allowed = False    
             s= agent.get_qs(state) 
+            #print(env.team.receivedCM)
             while not allowed:      
                 #print(s)
                 action = np.argmax(s)
