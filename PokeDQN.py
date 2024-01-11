@@ -37,6 +37,17 @@ MIN_EPSILON = 0.001
 AGGREGATE_STATS_EVERY = 10  # episodes
 SHOW_PREVIEW = False
 
+buff_stage = {"-4":0.5,
+               "-3":0.5715,
+               "-2":0.6667,
+               "-1":0.8,
+               "0":1,
+               "1":1.25,
+               "2":1.5,
+               "3":1.75,
+               "4":2
+}
+
 STAB = 1.2
 
 SuperEffective = 1.6
@@ -119,6 +130,10 @@ class Team:
     def charged_move1(self, other):
         other.receivedCM = True
 
+        atk_buff = 0
+        def_buff = 0
+        buff_target = None
+
         with open('type.json', 'r', encoding="utf-8") as ty:
             ttype = json.load(ty)
         with open('moves.json', 'r', encoding="utf-8") as mv:
@@ -126,6 +141,10 @@ class Team:
         for move_data in mov:
             if move_data.get('moveId') == self.battling.cm1:
                 self.battling.pk_cm1_power =  move_data.get('power')
+                if "buffs" in move_data:
+                    atk_buff = move_data.get('buffs')[0]
+                    def_buff = move_data.get('buffs')[1]
+                    buff_target = move_data.get('buffTarget')
         #計算屬性相剋傷害加成
         if ttype[self.battling.pk_cm1_type][other.battling.pk_type1] == 1.6:
             self.battling.pk_cm1_power *= SuperEffective
@@ -150,10 +169,14 @@ class Team:
         if self.battling.pk_cm1_type == self.battling.pk_type2:
             self.battling.pk_cm1_power *= STAB
         self.countT -= 20
-        return self.battling.pk_cm1_energyLoss, Damage(self.battling.pk_cm1_power,self.battling.Atk, other.battling.Def)
+        return self.battling.pk_cm1_energyLoss, Damage(self.battling.pk_cm1_power,self.battling.Atk, other.battling.Def), atk_buff, def_buff, buff_target
 
     def charged_move2(self, other):
         other.receivedCM = True
+
+        atk_buff = 0
+        def_buff = 0
+        buff_target = None
 
         with open('type.json', 'r', encoding="utf-8") as ty:
             ttype = json.load(ty)
@@ -162,6 +185,10 @@ class Team:
         for move_data in mov:
             if move_data.get('moveId') == self.battling.cm2:
                 self.battling.pk_cm2_power =  move_data.get('power')
+                if "buffs" in move_data:
+                    atk_buff = move_data.get('buffs')[0]
+                    def_buff = move_data.get('buffs')[1]
+                    buff_target = move_data.get('buffTarget')
         #計算屬性相剋傷害加成
         if ttype[self.battling.pk_cm2_type][other.battling.pk_type1] == 1.6:
             self.battling.pk_cm2_power *= SuperEffective
@@ -186,7 +213,7 @@ class Team:
         if self.battling.pk_cm2_type == self.battling.pk_type2:
             self.battling.pk_cm2_power *= STAB
         self.countT -= 20
-        return self.battling.pk_cm2_energyLoss, Damage(self.battling.pk_cm2_power,self.battling.Atk, other.battling.Def) 
+        return self.battling.pk_cm2_energyLoss, Damage(self.battling.pk_cm2_power,self.battling.Atk, other.battling.Def), atk_buff, def_buff, buff_target 
     
     '''def switch_teammate(self, down, up):       
         print(down)
@@ -294,6 +321,10 @@ class TeamTwo:
     def charged_move1(self, other):
         other.receivedCM = True
 
+        atk_buff = 0
+        def_buff = 0
+        buff_target = None
+
         with open('type.json', 'r', encoding="utf-8") as ty:
             ttype = json.load(ty)
         with open('moves.json', 'r', encoding="utf-8") as mv:
@@ -301,6 +332,11 @@ class TeamTwo:
         for move_data in mov:
             if move_data.get('moveId') == self.battling.cm1:
                 self.battling.pk_cm1_power =  move_data.get('power')
+                if "buffs" in move_data:
+                    atk_buff = move_data.get('buffs')[0]
+                    def_buff = move_data.get('buffs')[1]
+                    buff_target = move_data.get('buffTarget')
+
         #計算屬性相剋傷害加成
         if ttype[self.battling.pk_cm1_type][other.battling.pk_type1] == 1.6:
             self.battling.pk_cm1_power *= SuperEffective
@@ -326,10 +362,14 @@ class TeamTwo:
             self.battling.pk_cm1_power *= STAB
 
         self.countT -= 20
-        return self.battling.pk_cm1_energyLoss, Damage(self.battling.pk_cm1_power,self.battling.Atk, other.battling.Def)
+        return self.battling.pk_cm1_energyLoss, Damage(self.battling.pk_cm1_power,self.battling.Atk, other.battling.Def), atk_buff, def_buff, buff_target
 
     def charged_move2(self, other):
         other.receivedCM = True
+
+        atk_buff = 0
+        def_buff = 0
+        buff_target = None
 
         with open('type.json', 'r', encoding="utf-8") as ty:
             ttype = json.load(ty)
@@ -338,6 +378,11 @@ class TeamTwo:
         for move_data in mov:
             if move_data.get('moveId') == self.battling.cm2:
                 self.battling.pk_cm2_power =  move_data.get('power')
+                if "buffs" in move_data:
+                    atk_buff = move_data.get('buffs')[0]
+                    def_buff = move_data.get('buffs')[1]
+                    buff_target = move_data.get('buffTarget')
+
         #計算屬性相剋傷害加成
         if ttype[self.battling.pk_cm2_type][other.battling.pk_type1] == 1.6:
             self.battling.pk_cm2_power *= SuperEffective
@@ -371,7 +416,7 @@ class TeamTwo:
             self.battling.pk_cm2_power *= STAB
         
         self.countT -= 20
-        return self.battling.pk_cm2_energyLoss, Damage(self.battling.pk_cm2_power,self.battling.Atk, other.battling.Def) 
+        return self.battling.pk_cm2_energyLoss, Damage(self.battling.pk_cm2_power,self.battling.Atk, other.battling.Def), atk_buff, def_buff, buff_target 
     
     '''def switch_teammate(self, down, up):       
         print(down)
@@ -394,6 +439,18 @@ class TeamTwo:
 
 class Pokemon:
     def __init__(self, name, pk_fm, pk_cm1, pk_cm2, CP_limit):
+        name = name.lower()
+        if "暗影" in name:
+            self.shadow = True
+        elif "shadow" in name:
+            self.shadow = True
+        else:
+            self.shadow = False
+        name = name.replace('暗影', '')
+        name = name.replace('shadow', '')
+        name = name.replace('(', '')
+        name = name.replace(')', '')
+
         self.name = name
 
         self.TeamID = 0
@@ -403,6 +460,8 @@ class Pokemon:
         self.cm1 = pk_cm1
         self.cm2 = pk_cm2
         self.last_action_damage = 0
+        self.atkBuffLv = 0
+        self.defBuffLv = 0
 
         with open('Pokemon_'+str(CP_limit)+'_default.json', 'r', encoding="utf-8") as json_file:
             all_data = json.load(json_file) 
@@ -411,7 +470,10 @@ class Pokemon:
         self.Def = all_data[name]['CurrentDef']
         self.HP= all_data[name]['CurrentHP']
         self.pk_energy = 0
-        
+
+        if self.shadow == True:
+            self.Atk *= 6/5
+            self.Def *= 5/6
 
         self.AtkIV = all_data[name]['DefaultAtkIV']
         self.DefIV = all_data[name]['DefaulDefIV']
@@ -439,24 +501,21 @@ class Pokemon:
 
         [self.pk_type1, self.pk_type2]= all_data[name]['type']
         self.type = [self.pk_type1, self.pk_type2]
-        #算pk的屬修
-        '''if self.pk_fm_type == self.pk_type1:
-            self.pk_fm_power *= STAB
-        if self.pk_fm_type == self.pk_type2:
-            self.pk_fm_power *= STAB
-
-        if self.pk_cm1_type == self.pk_type1:
-            self.pk_cm1_power *= STAB
-        if self.pk_cm1_type == self.pk_type2:
-            self.pk_cm1_power *= STAB
-
-        if self.pk_cm2_type == self.pk_type1:
-            self.pk_cm2_power *= STAB
-        if self.pk_cm2_type == self.pk_type2:
-            self.pk_cm2_power *= STAB'''
 
 class PokemonTwo:
     def __init__(self, name, pk_fm, pk_cm1, pk_cm2, CP_limit):
+        name = name.lower()
+        if "暗影" in name:
+            self.shadow = True
+        elif "shadow" in name:
+            self.shadow = True
+        else:
+            self.shadow = False
+        name = name.replace('暗影', '')
+        name = name.replace('shadow', '')
+        name = name.replace('(', '')
+        name = name.replace(')', '')
+
         self.name = name
 
         self.TeamID = 0
@@ -466,6 +525,9 @@ class PokemonTwo:
         self.cm1 = pk_cm1
         self.cm2 = pk_cm2
         self.last_action_damage = 0
+        self.atkBuffLv = 0
+        self.defBuffLv = 0
+        
 
         with open('Pokemon_'+str(CP_limit)+'_default.json', 'r', encoding="utf-8") as json_file:
             all_data = json.load(json_file) 
@@ -475,6 +537,9 @@ class PokemonTwo:
         self.HP= all_data[name]['CurrentHP']
         self.pk_energy = 0
         
+        if self.shadow == True:
+            self.Atk *= 6/5
+            self.Def *= 5/6
 
         self.AtkIV = all_data[name]['DefaultAtkIV']
         self.DefIV = all_data[name]['DefaulDefIV']
@@ -502,25 +567,11 @@ class PokemonTwo:
 
         [self.pk_type1, self.pk_type2]= all_data[name]['type']
         self.type = [self.pk_type1, self.pk_type2]
-        #算pk的屬修
-        '''if self.pk_fm_type == self.pk_type1:
-            self.pk_fm_power *= STAB
-        if self.pk_fm_type == self.pk_type2:
-            self.pk_fm_power *= STAB
 
-        if self.pk_cm1_type == self.pk_type1:
-            self.pk_cm1_power *= STAB
-        if self.pk_cm1_type == self.pk_type2:
-            self.pk_cm1_power *= STAB
-
-        if self.pk_cm2_type == self.pk_type1:
-            self.pk_cm2_power *= STAB
-        if self.pk_cm2_type == self.pk_type2:
-            self.pk_cm2_power *= STAB'''
 
 T1 = [["妙蛙花","VINE_WHIP", "FRENZY_PLANT", "SLUDGE_BOMB"],
-        ["杖尾鱗甲龍", "DRAGON_TAIL", "FLAMETHROWER", "BOOMBURST"],
-        ["電燈怪","SPARK", "SURF", "THUNDERBOLT"]]
+        ["巨沼怪","MUD_SHOT", "HYDRO_CANNON", "EARTHQUAKE"],
+        ["白海獅","ICE_SHARD", "ICY_WIND", "DRILL_RUN"]]
 T2 = [["盔甲鳥","STEEL_WING", "SKY_ATTACK", "BRAVE_BIRD"],
         ["巨沼怪","MUD_SHOT", "HYDRO_CANNON", "EARTHQUAKE"],
         ["負電拍拍","QUICK_ATTACK", "DISCHARGE", "GRASS_KNOT"]]
@@ -548,6 +599,9 @@ class PokemonBattleEnv:
         self.EE = 0
         self.WAIT = 0
         self.team.fault = False
+        self.move_buff_target = None
+        self.move_atk_buff = 0
+        self.move_def_buff = 0
         return 1
 
     #Team的這一步做了甚麼、做得好不好
@@ -596,16 +650,25 @@ class PokemonBattleEnv:
                     self.team.firstOrder.HP = self.team.battling.HP
                     self.team.firstOrder.pk_energy = self.team.battling.pk_energy
                     self.team.firstOrder.OnStageAble = False
+                    self.team.firstOrder.move_buff_target = None
+                    self.team.firstOrder.move_atk_buff = 0
+                    self.team.firstOrder.move_def_buff = 0
                 elif self.team.secondOrder.name == self.team.battling.name:
                     self.team.secondOrder.OnStage = False
                     self.team.secondOrder.HP = self.team.battling.HP
                     self.team.secondOrder.pk_energy = self.team.battling.pk_energy
                     self.team.secondOrder.OnStageAble = False
+                    self.team.secondOrder.move_buff_target = None
+                    self.team.secondOrder.move_atk_buff = 0
+                    self.team.secondOrder.move_def_buff = 0
                 elif self.team.thirdOrder.name == self.team.battling.name:
                     self.team.thirdOrder.OnStage = False
                     self.team.thirdOrder.HP = self.team.battling.HP
                     self.team.thirdOrder.pk_energy = self.team.battling.pk_energy
                     self.team.thirdOrder.OnStageAble = False
+                    self.team.thirdOrder.move_buff_target = None
+                    self.team.thirdOrder.move_atk_buff = 0
+                    self.team.thirdOrder.move_def_buff = 0
 
                 if s == 0:
                     self.team.battling = self.team.firstOrder
@@ -659,16 +722,25 @@ class PokemonBattleEnv:
                     self.team.firstOrder.HP = self.team.battling.HP
                     self.team.firstOrder.pk_energy = self.team.battling.pk_energy
                     self.team.firstOrder.OnStageAble = True
+                    self.team.firstOrder.move_buff_target = None
+                    self.team.firstOrder.move_atk_buff = 0
+                    self.team.firstOrder.move_def_buff = 0
                 if self.team.secondOrder.name == self.team.battling.name:
                     self.team.secondOrder.OnStage = False
                     self.team.secondOrder.HP = self.team.battling.HP
                     self.team.secondOrder.pk_energy = self.team.battling.pk_energy
                     self.team.secondOrder.OnStageAble = True
+                    self.team.secondOrder.move_buff_target = None
+                    self.team.secondOrder.move_atk_buff = 0
+                    self.team.secondOrder.move_def_buff = 0
                 if self.team.thirdOrder.name == self.team.battling.name:
                     self.team.thirdOrder.OnStage = False
                     self.team.thirdOrder.HP = self.team.battling.HP
                     self.team.thirdOrder.pk_energy = self.team.battling.pk_energy
                     self.team.thirdOrder.OnStageAble = True
+                    self.team.thirdOrder.move_buff_target = None
+                    self.team.thirdOrder.move_atk_buff = 0
+                    self.team.thirdOrder.move_def_buff = 0
 
                 if s == 0:
                     self.team.battling = self.team.firstOrder
@@ -691,13 +763,13 @@ class PokemonBattleEnv:
                 self.EE, other.DD = self.team.fast_move(other.team)
             elif action == 1:
                 self.WAIT = 0
-                self.EE, other.DD = self.team.charged_move1(other.team)
+                self.EE, other.DD, self.move_atk_buff, self.move_def_buff, self.move_buff_target = self.team.charged_move1(other.team)
                 other.team.receivedCM = True
                 other.team.countT = self.team.countT
                 print("Team "+ f"{self.team.TeamID}"+" 使用大招一, 造成傷害："+f'{other.DD}')
             elif action == 2:
                 self.WAIT = 0
-                self.EE, other.DD = self.team.charged_move2(other.team)
+                self.EE, other.DD, self.move_atk_buff, self.move_def_buff, self.move_buff_target = self.team.charged_move2(other.team)
                 other.team.receivedCM = True
                 other.team.countT = self.team.countT
                 print("Team "+ f"{self.team.TeamID}"+" 使用大招二, 造成傷害："+f"{other.DD}")
@@ -725,6 +797,37 @@ class PokemonBattleEnv:
             other.DD = 0
             self.EE = 0
             self.WAIT = 0
+
+            if self.move_buff_target == 'self':
+                #reset atk and def to non-buff state
+                if self.team.battling.atkBuffLv != 0:
+                    self.team.battling.Atk /= buff_stage.get(str(self.team.battling.atkBuffLv))
+                if self.team.battling.defBuffLv != 0:
+                    self.team.battling.Def /= buff_stage.get(str(self.team.battling.defBuffLv))
+                #new buff state
+                self.team.battling.atkBuffLv += self.move_atk_buff
+                self.team.battling.defBuffLv += self.move_def_buff
+                #update atk and def
+                self.team.battling.Atk *= buff_stage.get(str(self.team.battling.atkBuffLv))
+                self.team.battling.Def *= buff_stage.get(str(self.team.battling.defBuffLv))
+
+            if self.move_buff_target == 'opponent':
+                #reset atk and def to non-buff state
+                if other.team.battling.atkBuffLv != 0:
+                    other.team.battling.Atk /= buff_stage.get(str(other.team.battling.atkBuffLv))
+                if other.team.battling.defBuffLv != 0:
+                    other.team.battling.Def /= buff_stage.get(str(other.team.battling.defBuffLv))
+                #new buff state
+                other.team.battling.atkBuffLv += self.move_atk_buff
+                other.team.battling.defBuffLv += self.move_def_buff
+                #update atk and def
+                print(buff_stage.get(other.team.battling.atkBuffLv))
+                other.team.battling.Atk *= buff_stage.get(str(other.team.battling.atkBuffLv))
+                other.team.battling.Def *= buff_stage.get(str(other.team.battling.defBuffLv))
+
+            self.move_buff_target = None
+            self.move_atk_buff = 0
+            self.move_def_buff = 0
 
 
         
@@ -786,6 +889,9 @@ class PokemonBattleEnv2:
         self.EE = 0
         self.WAIT = 0
         self.team.fault = False
+        self.move_buff_target = None
+        self.move_atk_buff = 0
+        self.move_def_buff = 0
         return 1
 
     #Team的這一步做了甚麼、做得好不好
@@ -834,16 +940,25 @@ class PokemonBattleEnv2:
                     self.team.firstOrder.HP = self.team.battling.HP
                     self.team.firstOrder.pk_energy = self.team.battling.pk_energy
                     self.team.firstOrder.OnStageAble = False
+                    self.team.firstOrder.move_buff_target = None
+                    self.team.firstOrder.move_atk_buff = 0
+                    self.team.firstOrder.move_def_buff = 0
                 elif self.team.secondOrder.name == self.team.battling.name:
                     self.team.secondOrder.OnStage = False
                     self.team.secondOrder.HP = self.team.battling.HP
                     self.team.secondOrder.pk_energy = self.team.battling.pk_energy
                     self.team.secondOrder.OnStageAble = False
+                    self.team.secondOrder.move_buff_target = None
+                    self.team.secondOrder.move_atk_buff = 0
+                    self.team.secondOrder.move_def_buff = 0
                 elif self.team.thirdOrder.name == self.team.battling.name:
                     self.team.thirdOrder.OnStage = False
                     self.team.thirdOrder.HP = self.team.battling.HP
                     self.team.thirdOrder.pk_energy = self.team.battling.pk_energy
                     self.team.thirdOrder.OnStageAble = False
+                    self.team.thirdOrder.move_buff_target = None
+                    self.team.thirdOrder.move_atk_buff = 0
+                    self.team.thirdOrder.move_def_buff = 0
 
                 if s == 0:
                     self.team.battling = self.team.firstOrder
@@ -897,16 +1012,25 @@ class PokemonBattleEnv2:
                     self.team.firstOrder.HP = self.team.battling.HP
                     self.team.firstOrder.pk_energy = self.team.battling.pk_energy
                     self.team.firstOrder.OnStageAble = True
+                    self.team.firstOrder.move_buff_target = None
+                    self.team.firstOrder.move_atk_buff = 0
+                    self.team.firstOrder.move_def_buff = 0
                 if self.team.secondOrder.name == self.team.battling.name:
                     self.team.secondOrder.OnStage = False
                     self.team.secondOrder.HP = self.team.battling.HP
                     self.team.secondOrder.pk_energy = self.team.battling.pk_energy
                     self.team.secondOrder.OnStageAble = True
+                    self.team.secondOrder.move_buff_target = None
+                    self.team.secondOrder.move_atk_buff = 0
+                    self.team.secondOrder.move_def_buff = 0
                 if self.team.thirdOrder.name == self.team.battling.name:
                     self.team.thirdOrder.OnStage = False
                     self.team.thirdOrder.HP = self.team.battling.HP
                     self.team.thirdOrder.pk_energy = self.team.battling.pk_energy
                     self.team.thirdOrder.OnStageAble = True
+                    self.team.thirdOrder.move_buff_target = None
+                    self.team.thirdOrder.move_atk_buff = 0
+                    self.team.thirdOrder.move_def_buff = 0
 
                 if s == 0:
                     self.team.battling = self.team.firstOrder
@@ -929,13 +1053,13 @@ class PokemonBattleEnv2:
                 self.EE, other.DD = self.team.fast_move(other.team)
             elif action == 1:
                 self.WAIT = 0
-                self.EE, other.DD = self.team.charged_move1(other.team)
+                self.EE, other.DD, self.move_atk_buff, self.move_def_buff, self.move_buff_target = self.team.charged_move1(other.team)
                 other.team.receivedCM = True
                 other.team.countT = self.team.countT
                 print("Team "+ f"{self.team.TeamID}"+" 使用大招一, 造成傷害："+f"{other.DD}")
             elif action == 2:
                 self.WAIT = 0
-                self.EE, other.DD = self.team.charged_move2(other.team)
+                self.EE, other.DD, self.move_atk_buff, self.move_def_buff, self.move_buff_target = self.team.charged_move2(other.team)
                 other.team.receivedCM = True
                 other.team.countT = self.team.countT
                 print("Team "+ f"{self.team.TeamID}"+" 使用大招二, 造成傷害："+f"{other.DD}")
@@ -963,6 +1087,35 @@ class PokemonBattleEnv2:
             self.EE = 0
             self.WAIT = 0
 
+            if self.move_buff_target == 'self':
+                #reset atk and def to non-buff state
+                if self.team.battling.atkBuffLv != 0:
+                    self.team.battling.Atk /= buff_stage.get(str(self.team.battling.atkBuffLv))
+                if self.team.battling.defBuffLv != 0:
+                    self.team.battling.Def /= buff_stage.get(str(self.team.battling.defBuffLv))
+                #new buff state
+                self.team.battling.atkBuffLv += self.move_atk_buff
+                self.team.battling.defBuffLv += self.move_def_buff
+                #update atk and def
+                self.team.battling.Atk *= buff_stage.get(str(self.team.battling.atkBuffLv))
+                self.team.battling.Def *= buff_stage.get(str(self.team.battling.defBuffLv))
+
+            if self.move_buff_target == 'opponent':
+                #reset atk and def to non-buff state
+                if other.team.battling.atkBuffLv != 0:
+                    other.team.battling.Atk /= buff_stage.get(str(other.team.battling.atkBuffLv))
+                if other.team.battling.defBuffLv != 0:
+                    other.team.battling.Def /= buff_stage.get(str(other.team.battling.defBuffLv))
+                #new buff state
+                other.team.battling.atkBuffLv += self.move_atk_buff
+                other.team.battling.defBuffLv += self.move_def_buff
+                #update atk and def
+                other.team.battling.Atk *= buff_stage.get(str(other.team.battling.atkBuffLv))
+                other.team.battling.Def *= buff_stage.get(str(other.team.battling.defBuffLv))
+
+            self.move_buff_target = None
+            self.move_atk_buff = 0
+            self.move_def_buff = 0
 
         
 
@@ -1290,7 +1443,7 @@ for episode in range(EPISODES):
         time_slot -= 1 
         env.team.switchClock += 1
         env2.team.switchClock += 1
-
+        #print(env.team.battling.shadow)
         down2_count = 0
         if env2.team.firstOrder.OnStageAble == False:
             down2_count += 1
