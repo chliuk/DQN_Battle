@@ -21,7 +21,7 @@ REPLAY_MEMORY_SIZE = 50_000  # How many last steps to keep for model training
 MIN_REPLAY_MEMORY_SIZE = 100  # Minimum number of steps in a memory to start training
 MINIBATCH_SIZE = 32  # How many steps (samples) to use for training
 UPDATE_TARGET_EVERY = 5  # Terminal states (end of episodes)
-MODEL_NAME = '2x256'
+MODEL_NAME = 'PokeBattle'
 MIN_REWARD = -200  # For model save
 MEMORY_FRACTION = 0.20
 
@@ -214,24 +214,6 @@ class Team:
             self.battling.pk_cm2_power *= STAB
         self.countT -= 20
         return self.battling.pk_cm2_energyLoss, Damage(self.battling.pk_cm2_power,self.battling.Atk, other.battling.Def), atk_buff, def_buff, buff_target 
-    
-    '''def switch_teammate(self, down, up):       
-        print(down)
-        if down.HP <= 0:
-            down.OnStage = False
-            down.OnStageAble = False
-        else:
-            down.OnStage = False
-
-        if up.OnStageAble == True:
-            # 將上場的 Pokemon 進入戰鬥
-            up.OnStage = True
-            #print(f"{up.name} 上場")
-            return 1
-        else:           
-            self.fault = True  
-            print("Team "+ f"{self.TeamID}"+" 全部角色皆陣亡！")
-            return 0'''
 
 
 class TeamTwo:
@@ -385,30 +367,22 @@ class TeamTwo:
 
         #計算屬性相剋傷害加成
         if ttype[self.battling.pk_cm2_type][other.battling.pk_type1] == 1.6:
-            self.battling.pk_cm2_power *= SuperEffective
-            print(self.battling.pk_cm2_power)
+            self.battling.pk_cm2_power *= SuperEffective 
         elif ttype[self.battling.pk_cm2_type][other.battling.pk_type1] == 0.625:
             self.battling.pk_cm2_power *= Not_Very_Effective
-            print(self.battling.pk_cm2_power)
         elif ttype[self.battling.pk_cm2_type][other.battling.pk_type1] == 0.391:
             self.battling.pk_cm2_power *= Immune
-            print(self.battling.pk_cm2_power)
         elif ttype[self.battling.pk_cm2_type][other.battling.pk_type1] == 1:
             self.battling.pk_cm2_power *= 1
-            print(self.battling.pk_cm2_power)
 
         if ttype[self.battling.pk_cm2_type][other.battling.pk_type2] == 1.6:
             self.battling.pk_cm2_power *= SuperEffective
-            print(self.battling.pk_cm2_power)
         elif ttype[self.battling.pk_cm2_type][other.battling.pk_type2] == 0.625:
             self.battling.pk_cm2_power *= Not_Very_Effective
-            print(self.battling.pk_cm2_power)
         elif ttype[self.battling.pk_cm2_type][other.battling.pk_type2] == 0.391:
             self.battling.pk_cm2_power *= Immune
-            print(self.battling.pk_cm2_power)
         elif ttype[self.battling.pk_cm2_type][other.battling.pk_type2] == 1:
             self.battling.pk_cm2_power *= 1
-            print(self.battling.pk_cm2_power)
 
         if self.battling.pk_cm2_type == self.battling.pk_type1:
             self.battling.pk_cm2_power *= STAB
@@ -417,25 +391,6 @@ class TeamTwo:
         
         self.countT -= 20
         return self.battling.pk_cm2_energyLoss, Damage(self.battling.pk_cm2_power,self.battling.Atk, other.battling.Def), atk_buff, def_buff, buff_target 
-    
-    '''def switch_teammate(self, down, up):       
-        print(down)
-        if down.HP <= 0:
-            down.OnStage = False
-            down.OnStageAble = False
-        else:
-            down.OnStage = False
-
-        if up.OnStageAble == True:
-            # 將上場的 Pokemon 進入戰鬥
-            up.OnStage = True
-            #print(f"{up.name} 上場")
-            return 1
-        else:           
-            self.fault = True  
-            print("Team "+ f"{self.TeamID}"+" 全部角色皆陣亡！")
-            return 0'''
-
 
 class Pokemon:
     def __init__(self, name, pk_fm, pk_cm1, pk_cm2, CP_limit):
@@ -627,7 +582,7 @@ class PokemonBattleEnv:
         #換人冷卻計時+1
         if self.team.battling.HP <= 0:
             self.team.receivedCM = False
-            print("需要換人")
+            #print("需要換人")
             #搜尋可上場的替換角色
             battle_able = []
             if self.team.firstOrder.OnStageAble == True and self.team.firstOrder.OnStage == False and self.team.firstOrder !=self.team.battling:
@@ -642,7 +597,7 @@ class PokemonBattleEnv:
             #如果沒有可使用角色，則隊伍fault
             if not battle_able:
                 self.team.fault = True
-                print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
+                #print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
             else:
                 s = battle_able[random.randint(0,len(battle_able)-1)]
                 if self.team.firstOrder.name == self.team.battling.name:
@@ -687,14 +642,13 @@ class PokemonBattleEnv:
             other.EE = 0
             if other.team.battling.HP <= 0:
                 M = max(self.WAIT, other.WAIT)
-                print(M)
                 self.WAIT = M
                 other.WAIT = M
                 
             self.team.countT -= self.WAIT
             other.team.countT = self.team.countT
             
-            print("Team "+ f"{self.team.TeamID}"+'換人等待 '+f'{self.WAIT}'+' 秒')
+            #print("Team "+ f"{self.team.TeamID}"+'換人等待 '+f'{self.WAIT}'+' 秒')
             
         elif action == 4 and self.team.countT-1 == time_slot:
             other.DD = 0
@@ -713,7 +667,7 @@ class PokemonBattleEnv:
             #如果沒有可使用角色，則隊伍fault
             if not battle_able:
                 self.team.fault = True
-                print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
+                #print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
             else:
                 s = battle_able[random.randint(0,len(battle_able)-1)]
             
@@ -754,9 +708,7 @@ class PokemonBattleEnv:
             self.WAIT = 0
             self.team.countT -= 1
             self.team.switchClock = 0 
-
-            
-            print('換上 '+f'{self.team.battling}')
+            #print('換上 '+f'{self.team.battling}')
         elif self.team.countT-1 == time_slot:
             if action == 0:
                 self.WAIT = 0
@@ -766,20 +718,21 @@ class PokemonBattleEnv:
                 self.EE, other.DD, self.move_atk_buff, self.move_def_buff, self.move_buff_target = self.team.charged_move1(other.team)
                 other.team.receivedCM = True
                 other.team.countT = self.team.countT
-                print("Team "+ f"{self.team.TeamID}"+" 使用大招一, 造成傷害："+f'{other.DD}')
+                #print("Team "+ f"{self.team.TeamID}"+" 使用大招一, 造成傷害："+f'{other.DD}')
             elif action == 2:
                 self.WAIT = 0
                 self.EE, other.DD, self.move_atk_buff, self.move_def_buff, self.move_buff_target = self.team.charged_move2(other.team)
                 other.team.receivedCM = True
                 other.team.countT = self.team.countT
-                print("Team "+ f"{self.team.TeamID}"+" 使用大招二, 造成傷害："+f"{other.DD}")
+                #print("Team "+ f"{self.team.TeamID}"+" 使用大招二, 造成傷害："+f"{other.DD}")
  
-        if self.team.receivedCM == True and self.team.shield >= 1 and self.team.countT-1 == time_slot:
+        if self.team.receivedCM == True and self.team.shield >= 1 and self.team.countT == time_slot:
             if action == 5:
                 other.DD = 1
+                print("減盾")
                 self.team.shield -= 1
                 
-                print("Team "+ f"{self.team.TeamID}"+" 開盾擋下了攻擊！")
+                #print("Team "+ f"{self.team.TeamID}"+" 開盾擋下了攻擊！")
             self.team.receivedCM = False
         elif self.team.receivedCM == True and self.team.shield ==0 and self.team.countT == time_slot:
             self.team.receivedCM = False
@@ -807,6 +760,10 @@ class PokemonBattleEnv:
                 #new buff state
                 self.team.battling.atkBuffLv += self.move_atk_buff
                 self.team.battling.defBuffLv += self.move_def_buff
+                if self.team.battling.atkBuffLv > 4: self.team.battling.atkBuffLv = 4
+                if self.team.battling.atkBuffLv < -4: self.team.battling.atkBuffLv = -4
+                if self.team.battling.defBuffLv > 4: self.team.battling.defBuffLv = 4
+                if self.team.battling.defBuffLv < -4: self.team.battling.defBuffLv = -4
                 #update atk and def
                 self.team.battling.Atk *= buff_stage.get(str(self.team.battling.atkBuffLv))
                 self.team.battling.Def *= buff_stage.get(str(self.team.battling.defBuffLv))
@@ -820,8 +777,11 @@ class PokemonBattleEnv:
                 #new buff state
                 other.team.battling.atkBuffLv += self.move_atk_buff
                 other.team.battling.defBuffLv += self.move_def_buff
+                if other.team.battling.atkBuffLv > 4: other.team.battling.atkBuffLv = 4
+                if other.team.battling.atkBuffLv < -4: other.team.battling.atkBuffLv = -4
+                if other.team.battling.defBuffLv > 4: other.team.battling.defBuffLv = 4
+                if other.team.battling.defBuffLv < -4: other.team.battling.defBuffLv = -4
                 #update atk and def
-                print(buff_stage.get(other.team.battling.atkBuffLv))
                 other.team.battling.Atk *= buff_stage.get(str(other.team.battling.atkBuffLv))
                 other.team.battling.Def *= buff_stage.get(str(other.team.battling.defBuffLv))
 
@@ -917,7 +877,7 @@ class PokemonBattleEnv2:
         #換人冷卻計時+1
         if self.team.battling.HP <= 0:
             self.team.receivedCM = False
-            print("需要換人")
+            #print("需要換人")
             #搜尋可上場的替換角色
             battle_able = []
             if self.team.firstOrder.OnStageAble == True and self.team.firstOrder.OnStage == False and self.team.firstOrder !=self.team.battling:
@@ -932,7 +892,7 @@ class PokemonBattleEnv2:
             #如果沒有可使用角色，則隊伍fault
             if not battle_able:
                 self.team.fault = True
-                print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
+                #print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
             else:
                 s = battle_able[random.randint(0,len(battle_able)-1)]
                 if self.team.firstOrder.name == self.team.battling.name:
@@ -977,14 +937,13 @@ class PokemonBattleEnv2:
             other.EE = 0
             if other.team.battling.HP <= 0:
                 M = max(self.WAIT, other.WAIT)
-                print(M)
                 self.WAIT = M
                 other.WAIT = M
                 
             self.team.countT -= self.WAIT
             other.team.countT = self.team.countT
             
-            print("Team "+ f"{self.team.TeamID}"+'換人等待 '+f'{self.WAIT}'+' 秒')
+            #print("Team "+ f"{self.team.TeamID}"+'換人等待 '+f'{self.WAIT}'+' 秒')
             
         elif action == 4 and self.team.countT-1 == time_slot:
             other.DD = 0
@@ -1003,7 +962,7 @@ class PokemonBattleEnv2:
             #如果沒有可使用角色，則隊伍fault
             if not battle_able:
                 self.team.fault = True
-                print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
+                #print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
             else:
                 s = battle_able[random.randint(0,len(battle_able)-1)]
             
@@ -1044,9 +1003,7 @@ class PokemonBattleEnv2:
             self.WAIT = 0
             self.team.countT -= 1
             self.team.switchClock = 0 
-
-            
-            print('換上 '+f'{self.team.battling}')
+            #print('換上 '+f'{self.team.battling}')
         elif self.team.countT-1 == time_slot:
             if action == 0:
                 self.WAIT = 0
@@ -1056,20 +1013,19 @@ class PokemonBattleEnv2:
                 self.EE, other.DD, self.move_atk_buff, self.move_def_buff, self.move_buff_target = self.team.charged_move1(other.team)
                 other.team.receivedCM = True
                 other.team.countT = self.team.countT
-                print("Team "+ f"{self.team.TeamID}"+" 使用大招一, 造成傷害："+f"{other.DD}")
+                #print("Team "+ f"{self.team.TeamID}"+" 使用大招一, 造成傷害："+f"{other.DD}")
             elif action == 2:
                 self.WAIT = 0
                 self.EE, other.DD, self.move_atk_buff, self.move_def_buff, self.move_buff_target = self.team.charged_move2(other.team)
                 other.team.receivedCM = True
                 other.team.countT = self.team.countT
-                print("Team "+ f"{self.team.TeamID}"+" 使用大招二, 造成傷害："+f"{other.DD}")
+                #print("Team "+ f"{self.team.TeamID}"+" 使用大招二, 造成傷害："+f"{other.DD}")
  
-        if self.team.receivedCM == True and self.team.shield >= 1 and self.team.countT-1 == time_slot:
+        if self.team.receivedCM == True and self.team.shield >= 1 and self.team.countT == time_slot:
             if action == 5:
                 other.DD = 1
-                self.team.shield -= 1
-                
-                print("Team "+ f"{self.team.TeamID}"+" 開盾擋下了攻擊！")
+                self.team.shield -= 1    
+                #print("Team "+ f"{self.team.TeamID}"+" 開盾擋下了攻擊！")
             self.team.receivedCM = False
         elif self.team.receivedCM == True and self.team.shield ==0 and self.team.countT == time_slot:
             self.team.receivedCM = False
@@ -1096,6 +1052,10 @@ class PokemonBattleEnv2:
                 #new buff state
                 self.team.battling.atkBuffLv += self.move_atk_buff
                 self.team.battling.defBuffLv += self.move_def_buff
+                if self.team.battling.atkBuffLv > 4: self.team.battling.atkBuffLv = 4
+                if self.team.battling.atkBuffLv < -4: self.team.battling.atkBuffLv = -4
+                if self.team.battling.defBuffLv > 4: self.team.battling.defBuffLv = 4
+                if self.team.battling.defBuffLv < -4: self.team.battling.defBuffLv = -4
                 #update atk and def
                 self.team.battling.Atk *= buff_stage.get(str(self.team.battling.atkBuffLv))
                 self.team.battling.Def *= buff_stage.get(str(self.team.battling.defBuffLv))
@@ -1109,6 +1069,10 @@ class PokemonBattleEnv2:
                 #new buff state
                 other.team.battling.atkBuffLv += self.move_atk_buff
                 other.team.battling.defBuffLv += self.move_def_buff
+                if other.team.battling.atkBuffLv > 4: other.team.battling.atkBuffLv = 4
+                if other.team.battling.atkBuffLv < -4: other.team.battling.atkBuffLv = -4
+                if other.team.battling.defBuffLv > 4: other.team.battling.defBuffLv = 4
+                if other.team.battling.defBuffLv < -4: other.team.battling.defBuffLv = -4
                 #update atk and def
                 other.team.battling.Atk *= buff_stage.get(str(other.team.battling.atkBuffLv))
                 other.team.battling.Def *= buff_stage.get(str(other.team.battling.defBuffLv))
@@ -1412,7 +1376,7 @@ class DQNAgent2:
 agent = DQNAgent()
 agent2 = DQNAgent2()
 # 訓練DQN代理
-EPISODES = 1  # 可調整
+EPISODES = 25001  # 可調整
 teamcount = 0
 for episode in range(EPISODES):
     time_slot = 270*2
@@ -1425,7 +1389,7 @@ for episode in range(EPISODES):
     #Team1.receivedCM = True
     with open('default_1500_team.json', 'r', encoding="utf-8") as defaultTeam:
         dteam = json.load(defaultTeam)
-    teamcount = int(episode/10)
+    teamcount = int(episode/50)
     Team2.reset(dteam[teamcount],2,1500)
     
         
@@ -1438,12 +1402,10 @@ for episode in range(EPISODES):
     done = False
 
     while not done:
-        print('第 '+str(540-time_slot)+' 回合, 隊伍一' +f'{env.team.battling.name}'+'剩餘血量:'f'{env.team.battling.HP}' + ', 隊伍二' +f'{env2.team.battling.name}'+'剩餘血量:'f'{env2.team.battling.HP}')
-        #print(time_slot)
+        #print('第 '+str(540-time_slot)+' 回合, 隊伍一' +f'{env.team.battling.name}'+'剩餘血量:'f'{env.team.battling.HP}' + ', 隊伍二' +f'{env2.team.battling.name}'+'剩餘血量:'f'{env2.team.battling.HP}')
         time_slot -= 1 
         env.team.switchClock += 1
         env2.team.switchClock += 1
-        #print(env.team.battling.shadow)
         down2_count = 0
         if env2.team.firstOrder.OnStageAble == False:
             down2_count += 1
@@ -1469,9 +1431,7 @@ for episode in range(EPISODES):
         if time_slot > 0 and env.team.fault != True and env2.team.fault != True:
             allowed2 = False    
             s2= agent2.get_qs(state2) 
-            #print(env2.team.receivedCM)
             while not allowed2:      
-                #print(s)
                 action = np.argmax(s2)
                 if env2.team.receivedCM == False:
                     if action  == 0 and env2.team.battling.pk_energy < 100:
@@ -1500,7 +1460,6 @@ for episode in range(EPISODES):
                             allowed2 = True
                         elif action == 3:
                             allowed2 = True  
-                #print(action)
                 s2[np.argmax(s2)] = s2[np.argmin(s2)] -1
             
             next_state2, reward2, done2, ac = env2.step(env,action)  # 執行行動並獲得下一個狀態、獎勵和終止條件
@@ -1511,9 +1470,7 @@ for episode in range(EPISODES):
  
             allowed = False    
             s= agent.get_qs(state) 
-            #print(env.team.receivedCM)
             while not allowed:      
-                #print(s)
                 action = np.argmax(s)
                 if env.team.receivedCM == False:
                     if action  == 0 and env.team.battling.pk_energy < 100:
@@ -1575,8 +1532,11 @@ for episode in range(EPISODES):
         agent.tensorboard.update_stats(reward_avg=average_reward, reward_min=min_reward, reward_max=max_reward, epsilon=epsilon)
 
         # Save model, but only when min reward is greater or equal a set value
-        if episode % 100 == 10:
-            agent.model.save(f'models/{MODEL_NAME}__{max_reward:_>7.2f}max_{average_reward:_>7.2f}avg_{min_reward:_>7.2f}min__{int(time.time())}.model')
+        if episode % 5000 == 0:
+            T = time.asctime( time.localtime(time.time()))
+            T = T.replace(' ', '_')
+            T = T.replace(':', '_')
+            agent.model.save(f'models/{MODEL_NAME}__{max_reward:_>7.2f}max_{average_reward:_>7.2f}avg_{episode}episodes__{T}.model')
 
     # Decay epsilon
     if epsilon > MIN_EPSILON:
@@ -1584,3 +1544,5 @@ for episode in range(EPISODES):
         epsilon = max(MIN_EPSILON, epsilon)
 
     print(str(episode)+' end')
+
+
