@@ -59,6 +59,51 @@ time_slot = 270*2
 def Damage(atkpk_power,atkpk_ATK,defpk_DEF):
     return math.floor(0.5*atkpk_power*atkpk_ATK*1.3/defpk_DEF)+1
 
+def Switch_poke_decide(battle_able_list, opponent):
+    with open('type.json', 'r', encoding="utf-8") as ty:
+        ttype = json.load(ty)
+        
+    prefer_idx = 0
+    prefer_metric = 0
+    max_prefer_metric = 0
+    for i in range(0, len(battle_able_list)):
+        for k in range(0,2):
+            for j in range(0,2):
+                if ttype[f'{battle_able_list[i].type[k]}'][f'{opponent.type[j]}'] == 1.6:
+                    prefer_metric += 1
+                if ttype[f'{battle_able_list[i].type[k]}'][f'{opponent.type[j]}'] == 0.625:
+                    prefer_metric -= 1
+                if ttype[f'{battle_able_list[i].type[k]}'][f'{opponent.type[j]}'] == 0.391:
+                    prefer_metric -= 1.5
+
+        for j in range(0,2):
+                if ttype[f'{battle_able_list[i].pk_fm_type}'][f'{opponent.type[j]}'] == 1.6:
+                    prefer_metric += 1
+                if ttype[f'{battle_able_list[i].pk_fm_type}'][f'{opponent.type[j]}'] == 0.625:
+                    prefer_metric -= 1
+                if ttype[f'{battle_able_list[i].pk_fm_type}'][f'{opponent.type[j]}'] == 0.391:
+                    prefer_metric -= 1.5
+
+                if ttype[f'{battle_able_list[i].pk_cm1_type}'][f'{opponent.type[j]}'] == 1.6:
+                    prefer_metric += 1
+                if ttype[f'{battle_able_list[i].pk_cm1_type}'][f'{opponent.type[j]}'] == 0.625:
+                    prefer_metric -= 1
+                if ttype[f'{battle_able_list[i].pk_cm1_type}'][f'{opponent.type[j]}'] == 0.391:
+                    prefer_metric -= 1.5
+
+                if ttype[f'{battle_able_list[i].pk_cm2_type}'][f'{opponent.type[j]}'] == 1.6:
+                    prefer_metric += 1
+                if ttype[f'{battle_able_list[i].pk_cm2_type}'][f'{opponent.type[j]}'] == 0.625:
+                    prefer_metric -= 1
+                if ttype[f'{battle_able_list[i].pk_cm2_type}'][f'{opponent.type[j]}'] == 0.391:
+                    prefer_metric -= 1.5
+        
+        if prefer_metric > max_prefer_metric:
+            max_prefer_metric = prefer_metric
+            prefer_idx = i
+                
+    return prefer_idx
+
 class Team:
     def __init__(self, pkList, teamID, CP_limit):
         self.countT = time_slot
@@ -585,12 +630,16 @@ class PokemonBattleEnv:
             #print("需要換人")
             #搜尋可上場的替換角色
             battle_able = []
+            battle_able_list = []
             if self.team.firstOrder.OnStageAble == True and self.team.firstOrder.OnStage == False and self.team.firstOrder !=self.team.battling:
                 battle_able.append(0)
+                battle_able_list.append(self.team.firstOrder)
             if self.team.secondOrder.OnStageAble == True and self.team.secondOrder.OnStage == False and self.team.secondOrder !=self.team.battling:
                 battle_able.append(1)
+                battle_able_list.append(self.team.secondOrder)
             if self.team.thirdOrder.OnStageAble == True and self.team.thirdOrder.OnStage == False and self.team.thirdOrder !=self.team.battling:
                 battle_able.append(2)
+                battle_able_list.append(self.team.thirdOrder)
 
 
             #先隨機挑角色上場，機制後續須補上
@@ -599,7 +648,7 @@ class PokemonBattleEnv:
                 self.team.fault = True
                 #print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
             else:
-                s = battle_able[random.randint(0,len(battle_able)-1)]
+                s = battle_able[Switch_poke_decide(battle_able_list, other.team.battling)]
                 if self.team.firstOrder.name == self.team.battling.name:
                     self.team.firstOrder.OnStage = False
                     self.team.firstOrder.HP = self.team.battling.HP
@@ -655,12 +704,16 @@ class PokemonBattleEnv:
             self.EE = 0
 
             battle_able = []
+            battle_able_list = []
             if self.team.firstOrder.OnStageAble == True and self.team.firstOrder.OnStage == False and self.team.firstOrder !=self.team.battling:
                 battle_able.append(0)
+                battle_able_list.append(self.team.firstOrder)
             if self.team.secondOrder.OnStageAble == True and self.team.secondOrder.OnStage == False and self.team.secondOrder !=self.team.battling:
                 battle_able.append(1)
+                battle_able_list.append(self.team.secondOrder)
             if self.team.thirdOrder.OnStageAble == True and self.team.thirdOrder.OnStage == False and self.team.thirdOrder !=self.team.battling:
                 battle_able.append(2)
+                battle_able_list.append(self.team.thirdOrder)
 
 
             #先隨機挑角色上場，機制後續須補上
@@ -669,7 +722,7 @@ class PokemonBattleEnv:
                 self.team.fault = True
                 #print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
             else:
-                s = battle_able[random.randint(0,len(battle_able)-1)]
+                s = battle_able[Switch_poke_decide(battle_able_list, other.team.battling)]
             
                 if self.team.firstOrder.name == self.team.battling.name:
                     self.team.firstOrder.OnStage = False
@@ -729,7 +782,6 @@ class PokemonBattleEnv:
         if self.team.receivedCM == True and self.team.shield >= 1 and self.team.countT == time_slot:
             if action == 5:
                 other.DD = 1
-                print("減盾")
                 self.team.shield -= 1
                 
                 #print("Team "+ f"{self.team.TeamID}"+" 開盾擋下了攻擊！")
@@ -821,10 +873,13 @@ class PokemonBattleEnv:
             with open('Pokemon_'+f'{self.team.CP_limit}'+'_default.json', 'r', encoding="utf-8") as json_file:
                 all_data = json.load(json_file)
 
-            reward += (self.team.battling.HP/all_data[f'{self.team.battling.name}']['CurrentHP'] - other.team.battling.HP/all_data[f'{other.team.battling.name}']['CurrentHP'])/20
+            reward += (self.team.battling.HP/all_data[f'{self.team.battling.name}']['CurrentHP'] - other.team.battling.HP/all_data[f'{other.team.battling.name}']['CurrentHP'])*2
             
-            reward += (self.team.battling.pk_energy/100 - other.team.battling.pk_energy/100)/20
-            
+            reward += (self.team.battling.pk_energy/100 - other.team.battling.pk_energy/100)*2
+            if other.team.battling.atkBuffLv < 0: reward -= 1
+            if other.team.battling.defBuffLv < 0: reward -= 1
+            if self.team.battling.atkBuffLv > 0: reward += 1
+            if self.team.battling.defBuffLv > 0: reward += 1
             next_state = reward
             return next_state, reward, done, action
         else: 
@@ -880,12 +935,16 @@ class PokemonBattleEnv2:
             #print("需要換人")
             #搜尋可上場的替換角色
             battle_able = []
+            battle_able_list = []
             if self.team.firstOrder.OnStageAble == True and self.team.firstOrder.OnStage == False and self.team.firstOrder !=self.team.battling:
                 battle_able.append(0)
+                battle_able_list.append(self.team.firstOrder)
             if self.team.secondOrder.OnStageAble == True and self.team.secondOrder.OnStage == False and self.team.secondOrder !=self.team.battling:
                 battle_able.append(1)
+                battle_able_list.append(self.team.secondOrder)
             if self.team.thirdOrder.OnStageAble == True and self.team.thirdOrder.OnStage == False and self.team.thirdOrder !=self.team.battling:
                 battle_able.append(2)
+                battle_able_list.append(self.team.thirdOrder)
 
 
             #先隨機挑角色上場，機制後續須補上
@@ -894,7 +953,7 @@ class PokemonBattleEnv2:
                 self.team.fault = True
                 #print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
             else:
-                s = battle_able[random.randint(0,len(battle_able)-1)]
+                s = battle_able[Switch_poke_decide(battle_able_list, other.team.battling)]
                 if self.team.firstOrder.name == self.team.battling.name:
                     self.team.firstOrder.OnStage = False
                     self.team.firstOrder.HP = self.team.battling.HP
@@ -950,13 +1009,16 @@ class PokemonBattleEnv2:
             self.EE = 0
 
             battle_able = []
+            battle_able_list = []
             if self.team.firstOrder.OnStageAble == True and self.team.firstOrder.OnStage == False and self.team.firstOrder !=self.team.battling:
                 battle_able.append(0)
+                battle_able_list.append(self.team.firstOrder)
             if self.team.secondOrder.OnStageAble == True and self.team.secondOrder.OnStage == False and self.team.secondOrder !=self.team.battling:
                 battle_able.append(1)
+                battle_able_list.append(self.team.secondOrder)
             if self.team.thirdOrder.OnStageAble == True and self.team.thirdOrder.OnStage == False and self.team.thirdOrder !=self.team.battling:
                 battle_able.append(2)
-
+                battle_able_list.append(self.team.thirdOrder)
 
             #先隨機挑角色上場，機制後續須補上
             #如果沒有可使用角色，則隊伍fault
@@ -964,7 +1026,7 @@ class PokemonBattleEnv2:
                 self.team.fault = True
                 #print("Team "+ f"{self.team.TeamID}"+" 全部角色皆陣亡！")
             else:
-                s = battle_able[random.randint(0,len(battle_able)-1)]
+                s = battle_able[Switch_poke_decide(battle_able_list, other.team.battling)]
             
                 if self.team.firstOrder.name == self.team.battling.name:
                     self.team.firstOrder.OnStage = False
@@ -1115,7 +1177,10 @@ class PokemonBattleEnv2:
             reward += (self.team.battling.HP/all_data[f'{self.team.battling.name}']['CurrentHP'] - other.team.battling.HP/all_data[f'{other.team.battling.name}']['CurrentHP'])/20
             
             reward += (self.team.battling.pk_energy/100 - other.team.battling.pk_energy/100)/20
-            
+            if other.team.battling.atkBuffLv < 0: reward -= 0.005
+            if other.team.battling.defBuffLv < 0: reward -= 0.005
+            if self.team.battling.atkBuffLv > 0: reward += 0.005
+            if self.team.battling.defBuffLv > 0: reward += 0.005
             next_state = reward
             return next_state, reward, done, action
         else: 
@@ -1214,8 +1279,8 @@ class DQNAgent:
     def create_model(self):
         # 構建深度神經網路模型
         model = Sequential()
-        model.add(Dense(128, activation='relu', input_shape=(1,)))  # 請替換 your_input_dim 為實際的輸入維度
-        model.add(Dense(128, activation='relu'))
+        model.add(Dense(128, activation='softmax', input_shape=(1,)))  # 請替換 your_input_dim 為實際的輸入維度
+        model.add(Dense(128, activation='softmax'))
         model.add(Dense(env.ACTION_SPACE_SIZE, activation='linear'))  # ACTION_SPACE_SIZE = how many choices (9)
         model.compile(loss="mse", optimizer=adam_v2.Adam(lr=0.001))
 
@@ -1312,8 +1377,8 @@ class DQNAgent2:
     def create_model(self):
         # 構建深度神經網路模型
         model = Sequential()
-        model.add(Dense(128, activation='relu', input_shape=(1,)))  # 請替換 your_input_dim 為實際的輸入維度
-        model.add(Dense(128, activation='relu'))
+        model.add(Dense(128, activation='softmax', input_shape=(1,)))  # 請替換 your_input_dim 為實際的輸入維度
+        model.add(Dense(128, activation='softmax'))
         model.add(Dense(env.ACTION_SPACE_SIZE, activation='linear'))  # ACTION_SPACE_SIZE = how many choices (9)
         model.compile(loss="mse", optimizer=adam_v2.Adam(lr=0.001))
         return model
@@ -1376,7 +1441,7 @@ class DQNAgent2:
 agent = DQNAgent()
 agent2 = DQNAgent2()
 # 訓練DQN代理
-EPISODES = 25001  # 可調整
+EPISODES = 2001  # 可調整
 teamcount = 0
 for episode in range(EPISODES):
     time_slot = 270*2
@@ -1385,13 +1450,14 @@ for episode in range(EPISODES):
 
     # Restarting episode - reset episode reward and step number
     episode_reward = 0
-    Team1.reset(T1,1,1500)
+    #Team1.reset(T1,1,1500)
     #Team1.receivedCM = True
     with open('default_1500_team.json', 'r', encoding="utf-8") as defaultTeam:
         dteam = json.load(defaultTeam)
     teamcount = int(episode/50)
+    teamcount1 = 10+int(episode/200)
     Team2.reset(dteam[teamcount],2,1500)
-    
+    Team1.reset(dteam[teamcount1],1,1500)
         
     state = env.reset(Team1)  # 獲得初始狀態
     state2 = env2.reset(Team2)  # 獲得初始狀態
@@ -1532,11 +1598,11 @@ for episode in range(EPISODES):
         agent.tensorboard.update_stats(reward_avg=average_reward, reward_min=min_reward, reward_max=max_reward, epsilon=epsilon)
 
         # Save model, but only when min reward is greater or equal a set value
-        if episode % 5000 == 0:
+        if episode % 2000 == 0:
             T = time.asctime( time.localtime(time.time()))
             T = T.replace(' ', '_')
             T = T.replace(':', '_')
-            agent.model.save(f'models/{MODEL_NAME}__{max_reward:_>7.2f}max_{average_reward:_>7.2f}avg_{episode}episodes__{T}.model')
+            agent.model.save(f'models/softmax_{MODEL_NAME}__{max_reward:_>7.2f}max_{average_reward:_>7.2f}avg_{episode}episodes__{T}.model')
 
     # Decay epsilon
     if epsilon > MIN_EPSILON:
