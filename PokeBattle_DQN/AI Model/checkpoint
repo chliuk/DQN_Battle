@@ -1,0 +1,2 @@
+model_checkpoint_path: "GRU.weight"
+all_model_checkpoint_paths: "GRU.weight"

@@ -1,0 +1,2276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>786</width>
+    <height>415</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>90</y>
+      <width>171</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Load Model</string>
+    </property>
+    <widget class="QPushButton" name="pushButton">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>30</y>
+       <width>131</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Load Model</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>281</width>
+      <height>371</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Your Team</string>
+    </property>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>261</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>First Pokemon</string>
+     </property>
+     <widget class="QComboBox" name="comboBox">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>30</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>妙蛙花</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>盔甲鳥</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>巨沼怪</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勾魂眼</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>6</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>7</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>8</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_2">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>藤編</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>鋼翼</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>泥巴射擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>暗影爪</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>6</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>7</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>8</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_3">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>瘋狂植物</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>污泥炸彈</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>神鳥猛擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勇鳥猛攻</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>加農水砲</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>地震</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>欺詐</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>報恩</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_4">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>瘋狂植物</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>污泥炸彈</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>神鳥猛擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勇鳥猛攻</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>加農水砲</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>地震</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>欺詐</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>報恩</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_8">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>250</y>
+       <width>261</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Third Pokemon</string>
+     </property>
+     <widget class="QComboBox" name="comboBox_13">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>30</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>妙蛙花</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>盔甲鳥</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>巨沼怪</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勾魂眼</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>6</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>7</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>8</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_14">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>藤編</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>鋼翼</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>泥巴射擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>暗影爪</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>6</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>7</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>8</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_15">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>瘋狂植物</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>污泥炸彈</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>神鳥猛擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勇鳥猛攻</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>加農水砲</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>地震</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>欺詐</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>報恩</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_16">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>瘋狂植物</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>污泥炸彈</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>神鳥猛擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勇鳥猛攻</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>加農水砲</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>地震</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>欺詐</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>報恩</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_6">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>130</y>
+       <width>261</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Second Pokemon</string>
+     </property>
+     <widget class="QComboBox" name="comboBox_5">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>30</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>妙蛙花</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>盔甲鳥</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>巨沼怪</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勾魂眼</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>6</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>7</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>8</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_6">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>藤編</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>鋼翼</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>泥巴射擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>暗影爪</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>6</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>7</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>8</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_7">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>瘋狂植物</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>污泥炸彈</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>神鳥猛擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勇鳥猛攻</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>加農水砲</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>地震</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>欺詐</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>報恩</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_8">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>瘋狂植物</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>污泥炸彈</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>神鳥猛擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勇鳥猛攻</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>加農水砲</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>地震</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>欺詐</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>報恩</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_5">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>10</y>
+      <width>171</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Multiple battle</string>
+    </property>
+    <widget class="QComboBox" name="comboBox_41">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>30</y>
+       <width>131</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>超級聯盟Meta</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>高級聯盟Meta</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>奇幻盃</string>
+      </property>
+     </item>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_7">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>10</y>
+      <width>291</width>
+      <height>371</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string> Opponent's Team</string>
+    </property>
+    <widget class="QGroupBox" name="groupBox_12">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>261</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>First Pokemon</string>
+     </property>
+     <widget class="QComboBox" name="comboBox_29">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>30</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>妙蛙花</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>盔甲鳥</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>巨沼怪</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勾魂眼</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>6</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>7</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>8</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_30">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>藤編</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>鋼翼</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>泥巴射擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>暗影爪</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>6</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>7</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>8</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_31">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>瘋狂植物</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>污泥炸彈</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>神鳥猛擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勇鳥猛攻</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>加農水砲</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>地震</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>欺詐</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>報恩</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_32">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>瘋狂植物</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>污泥炸彈</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>神鳥猛擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勇鳥猛攻</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>加農水砲</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>地震</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>欺詐</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>報恩</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_13">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>250</y>
+       <width>261</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Third Pokemon</string>
+     </property>
+     <widget class="QComboBox" name="comboBox_33">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>30</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>妙蛙花</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>盔甲鳥</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>巨沼怪</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勾魂眼</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>6</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>7</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>8</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_34">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>藤編</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>鋼翼</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>泥巴射擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>暗影爪</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>6</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>7</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>8</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_35">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>瘋狂植物</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>污泥炸彈</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>神鳥猛擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勇鳥猛攻</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>加農水砲</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>地震</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>欺詐</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>報恩</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_36">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>瘋狂植物</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>污泥炸彈</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>神鳥猛擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勇鳥猛攻</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>加農水砲</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>地震</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>欺詐</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>報恩</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_14">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>130</y>
+       <width>261</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Second Pokemon</string>
+     </property>
+     <widget class="QComboBox" name="comboBox_37">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>30</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>妙蛙花</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>盔甲鳥</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>巨沼怪</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勾魂眼</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>6</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>7</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>8</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_38">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>藤編</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>鋼翼</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>泥巴射擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>暗影爪</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>6</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>7</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>8</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_39">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>瘋狂植物</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>污泥炸彈</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>神鳥猛擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勇鳥猛攻</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>加農水砲</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>地震</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>欺詐</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>報恩</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_40">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>60</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>瘋狂植物</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>污泥炸彈</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>神鳥猛擊</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>勇鳥猛攻</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>加農水砲</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>地震</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>欺詐</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>報恩</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_4">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>180</y>
+      <width>171</width>
+      <height>201</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Simulation Start</string>
+    </property>
+    <widget class="QPushButton" name="pushButton_2">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>30</y>
+       <width>131</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Start</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="textEdit">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>80</y>
+       <width>111</width>
+       <height>91</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'PMingLiU'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
